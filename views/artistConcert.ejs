@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artists</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/header', { title: 'Artists' }) %>
+    <%- include('partials/nav') %>
+    <div class="container">
+        <h2>List of Artists performing at a Concert</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ArtistConcertID</th>
+                    <th>ArtistID</th>
+                    <th>ConcertID</th>
+                </tr>
+            </thead>
+        
+            <tbody>
+                <% artistConcert.forEach(row => { %>
+                    <tr>
+                        <td><%= row.artistConcertID %></td>
+                        <td><%= row.artistID %></td>
+                        <td><%= row.concertID %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>

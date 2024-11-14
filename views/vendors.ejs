@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendors</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/header', { title: 'Vendors' }) %>
+    <%- include('partials/nav') %>
+    <div class="container">
+        <h2>List of Vendors</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Vendor ID</th>
+                    <th>Vendor Name</th>
+                    <th>Vendor Product</th>
+                    <th colspan="2">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% vendors.forEach(row => { %>
+                    <tr>
+                        <td><%= row.vendorID %></td>
+                        <td><%= row.vendorName %></td>
+                        <td><%= row.vendorProduct %></td>
+                        <td><a href="/vendors">Edit</a></td>
+                        <td><a href="/vendors">Delete</a></td>
+                    </tr>
+                 <% }) %>
+            </tbody>
+        </table>
+
+        <!-- Add/Edit/Delete Form -->
+        <h3>Add Vendor</h3>
+        <form action="/vendor">
+            <label for="vendorName">Vendor Name:</label>
+            <input type="text" id="vendorName" name="vendorName" placeholder="Enter vendor name" required><br>
+
+            <label for="vendorName">Vendor Product:</label>
+            <input type="text" id="vendorProduct" name="vendorProduct" placeholder="Enter vendor product" required><br>
+
+            <input type="submit" value="Add Vendor">
+        </form>
+
+        <h3>Update Vendor</h3>
+        <form action="/vendor">
+            <label for="vendorName">Vendor Name:</label>
+            <input type="text" id="vendorName" name="vendorName" placeholder="Enter vendor name" required><br>
+
+            <label for="vendorName">Vendor Product:</label>
+            <input type="text" id="vendorProduct" name="vendorProduct" placeholder="Enter vendor product" required><br>
+
+            <input type="submit" value="Edit Vendor">
+        </form>
+
+        <h3>Delete Vendor</h3>
+        <form action="/vendor">
+            <label for="vendorName">Vendor Name:</label>
+            <input type="text" id="vendorName" name="vendorName" placeholder="Enter vendor name" required><br>
+
+            <label for="vendorName">Vendor Product:</label>
+            <input type="text" id="vendorProduct" name="vendorProduct" placeholder="Enter vendor product" required><br>
+
+            <input type="submit" value="Delete Vendor">
+        </form>
+    </div>
+</body>
+</html>

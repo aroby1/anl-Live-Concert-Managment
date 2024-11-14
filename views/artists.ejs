@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artists</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/header', { title: 'Artists' }) %>
+    <%- include('partials/nav') %>
+    <div class="container">
+        <h2>List of Artists</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Artist ID</th>
+                    <th>Artist Name</th>
+                    <th colspan="2">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% artists.forEach(row => { %>
+                    <tr>
+                        <td><%= row.artistID %></td>
+                        <td><%= row.artistName %></td>
+                        <td><a href="/artists">Edit</a></td>
+                        <td><a href="/artists">Delete</a></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+        <!-- Add/Edit/Delete Form -->
+        <h3>Add Artist</h3>
+        <form action="/artists">
+            <label for="artistName">Artist Name:</label>
+            <input type="text" id="artistName" name="artistName" placeholder="Enter artist name" required><br>
+            <input type="submit" value="Add Artist">
+        </form>
+        <h3>Edit Artist</h3>
+        <form action="/artists">
+            <label for="artistName">Artist Name:</label>
+            <input type="text" id="artistName" name="artistName" placeholder="Enter artist name" required><br>
+            <input type="submit" value="Edit Artist">
+        </form>
+        <h3>Delete Artist</h3>
+        <form action="/artists">
+            <label for="artistName">Artist Name:</label>
+            <input type="text" id="artistName" name="artistName" placeholder="Enter artist name" required><br>
+            <input type="submit" value="Delete Artist">
+        </form>
+    </div>
+</body>
+</html>
+

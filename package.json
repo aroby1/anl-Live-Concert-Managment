@@ -1,0 +1,19 @@
+{
+  "name": "anl-project",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Aiden and Luke",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "mysql": "^2.18.1"
+  },
+  "description": "",
+  "devDependencies": {
+    "forever": "^4.0.3"
+  }
+}
