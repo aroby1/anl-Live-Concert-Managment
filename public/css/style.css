@@ -1,4 +1,3 @@
-/* General body styles */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -10,20 +9,20 @@ body {
 nav {
     background-color: #333;
     overflow: hidden;
-    height: 70px; /* Increased height for a larger navbar */
+    height: 70px;
     line-height: 70px;
-    text-decoration: none; /* Vertically center text inside the navbar */
+    text-decoration: none;
 }
 
 nav a {
     float: left;
     display: block;
     color: white;
-    padding: 0 30px; /* Increased horizontal padding for bigger links */
+    padding: 0 30px;
     text-align: center;
     text-decoration: none;
-    font-size: 18px; /* Increased font size for bigger text */
-    font-weight: bold; /* Bold the text for more emphasis */
+    font-size: 18px;
+    font-weight: bold;
 }
 
 nav a:hover {
