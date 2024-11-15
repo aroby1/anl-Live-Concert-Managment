@@ -1,45 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tours</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
-    <%- include('partials/header', { title: 'Tours' }) %>
-    <%- include('partials/nav') %>
-    <div class="container">
-        <h2>List of Tours</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tour ID</th>
-                        <th>Tour Name</th>
-                        <th>Artist Name</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Total Concerts</th>
-                        <th colspan="2">Actions</th>
-                    </tr>
-                </thead>
+<div class="container">
+<h2>List of Tours</h2>
+    <table>
+        <thead>
+            <tr>
+                {{#each data.[0]}}
+                    <th>
+                        {{@key}}
+                    </th>
+                {{/each}}
+                <th colspan="2">Actions</th>
+            </tr>
+        </thead>
 
-                <tbody>
-                    <% tours.forEach(row => { %>
-                        <tr>
-                            <td><%= row.tourID %></td>
-                            <td><%= row.tourName %></td>
-                            <td><%= row.artistName %></td>
-                            <td><%= row.tourStartDate %></td>
-                            <td><%= row.tourEndDate %></td>
-                            <td><%= row.concertTotal %></td>
-                            <td><a href="/tours">Edit</a></td>
-                            <td><a href="/tours">Delete</a></td>
-                        </tr>
-
-                    <% }) %>
-                </tbody>
-            </table>
+        <tbody>
+            {{#each data}}
+                <tr>
+                    <td>{{ this.tourID }}</td>
+                    <td>{{ this.tourName }}</td>
+                    <td>{{ this.artistName }}</td>
+                    <td>{{ this.tourStartDate }}</td>
+                    <td>{{ this.tourEndDate }}</td>
+                    <td>{{ this.concertTotal }}</td>
+                    <td><a href="/artists">Edit</a></td>
+                    <td><a href="/artists">Delete</a></td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
 
         <h3>Add Tour</h3>
         <form action="/tour">

@@ -1,0 +1,55 @@
+<div class="container">
+    <h2>List of Concerts</h2>
+        <table>
+            <thead>
+                    <tr>
+                    {{#each data.[0]}}
+                    <th>
+                        {{@key}}
+                    </th>
+                    {{/each}}
+                    <th colspan="2">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {{#each data}}
+                    <tr>
+                        <td>{{ this.concertID }}</td>
+                        <td>{{ this.numTicketAvailable }}</td>
+                        <td>{{ this.numTicketSold }}</td>
+                        <td>{{ this.startDate }}</td>
+                        <td>{{ this.location }}</td>
+                        <td>{{ this.tourName }}</td>
+                        <td>{{ this.artistName }}</td>
+                        <td><a href="/artists">Edit</a></td>
+                        <td><a href="/artists">Delete</a></td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+
+        <h3>Add Concert</h3>
+        <p>To add a new concert, please enter the concert information below and click 'Submit'!</p>
+        <form id="add-concert-form" action="/add-concert-form" method="POST">
+            <label for="tourName">Tour Name:</label>
+            <input type="text" id="tourName" name="tourName" placeholder="Enter tour name" required><br>
+    
+            <label for="artistName">Artist Name:</label>
+            <input type="text" id="artistName" name="artistName" placeholder="Enter artist name" required><br>
+
+            <label for="ticketsAvailable">Tickets Available:</label>
+            <input type="number" id="ticketsAvailable" name="ticketsAvailable" placeholder="Enter number of tickets available" required><br>
+
+            <label for="ticketsSold">Tickets Sold:</label>
+            <input type="number" id="ticketsSold" name="ticketsSold" placeholder="Enter number of tickets sold" required><br>
+
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate" name="startDate" required><br>
+
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" placeholder="Enter location" required><br>
+
+            <input type="submit" value="Add Concert">
+        </form>
+    </div>
