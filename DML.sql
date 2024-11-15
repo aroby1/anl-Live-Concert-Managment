@@ -7,6 +7,8 @@
 -- And DELETE & UPDATE for least one M:M relationship. x
 -- Put another way, you need a method to SELECT, INSERT, UPDATE and DELETE the rows of an intersection table in your project. x
 
+-- Query for add a new character functionality with colon : character being used to 
+
 -- Insert into Artists table
 INSERT INTO Artists (artistName) 
 VALUES (:artistName);
