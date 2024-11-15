@@ -1,36 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vendors</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
-    <%- include('partials/header', { title: 'Vendors' }) %>
-    <%- include('partials/nav') %>
-    <div class="container">
-        <h2>List of Vendors</h2>
+<div class="container">
+    <h2>List of Vendors</h2>
         <table>
             <thead>
                 <tr>
-                    <th>Vendor ID</th>
-                    <th>Vendor Name</th>
-                    <th>Vendor Product</th>
+                    {{#each data.[0]}}
+                    <th>
+                        {{@key}}
+                    </th>
+                    {{/each}}
                     <th colspan="2">Actions</th>
                 </tr>
             </thead>
 
             <tbody>
-                <% vendors.forEach(row => { %>
+                {{#each data}}
                     <tr>
-                        <td><%= row.vendorID %></td>
-                        <td><%= row.vendorName %></td>
-                        <td><%= row.vendorProduct %></td>
-                        <td><a href="/vendors">Edit</a></td>
-                        <td><a href="/vendors">Delete</a></td>
+                        <td>{{ this.vendorID }}</td>
+                        <td>{{ this.vendorName }}</td>
+                        <td>{{ this.vendorProduct }}</td>
+                        <td><a href="/artists">Edit</a></td>
+                        <td><a href="/artists">Delete</a></td>
                     </tr>
-                 <% }) %>
+                {{/each}}
             </tbody>
         </table>
 

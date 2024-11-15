@@ -1,0 +1,26 @@
+<div class="container">
+    <h2>List of Artists performing at a Concert</h2>
+        <table>
+            <thead>
+                <tr>
+                    {{#each data.[0]}}
+                    <th>
+                        {{@key}}
+                    </th>
+                    {{/each}}
+                    <th colspan="2">Actions</th>
+                </tr>
+            </thead>
+        
+            <tbody>
+                {{#each data}}
+                    <tr>
+                        <td>{{ this.artistConcertID }}</td>
+                        <td>{{ this.artistID }}</td>
+                        <td>{{ this.concertID }}</td>
+                        <td><a href="/artists">Edit</a></td>
+                        <td><a href="/artists">Delete</a></td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
