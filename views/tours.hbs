@@ -17,10 +17,10 @@
                 <tr>
                     <td>{{ this.tourID }}</td>
                     <td>{{ this.tourName }}</td>
-                    <td>{{ this.artistName }}</td>
                     <td>{{ this.tourStartDate }}</td>
                     <td>{{ this.tourEndDate }}</td>
                     <td>{{ this.concertTotal }}</td>
+                    <td>{{ this.artistName }}</td>
                     <td><a href="/artists">Edit</a></td>
                     <td><a href="/artists">Delete</a></td>
                 </tr>
@@ -29,7 +29,8 @@
     </table>
 
         <h3>Add Tour</h3>
-        <form action="/tour">
+        <p>To add a new Tour, please enter the tour information below then click 'Add Tour'!</p>
+        <form id="add-tour-form" action="/add-tour-form" method="POST">
             <label for="tourName">Tour Name:</label>
             <input type="text" id="tourName" name="tourName" placeholder="Enter tour name" required><br>
     
@@ -37,55 +38,15 @@
             <input type="text" id="artistName" name="artistName" placeholder="Enter artist name" required><br>
 
             <label for="startDate">Start Date:</label>
-            <input type="date" id="startDate" name="startDate" required><br>
+            <input type="datetime-local" id="startDate" name="startDate" required><br>
 
             <label for="endDate">End Date:</label>
-            <input type="date" id="endDate" name="endDate" required><br>
+            <input type="datetime-local" id="endDate" name="endDate" required><br>
 
             <label for="totalConcerts">Total Concerts:</label>
-            <input type="number" id="totalConcerts" name="totalConcerts" placeholder="Enter total number of concerts" required><br>
+            <input type="number" id="concertTotal" name="concertTotal" placeholder="Enter total number of concerts" required><br>
 
             <input type="submit" value="Add Tour">
-        </form>
-
-        <h3>Update Tour</h3>
-        <form action="/tour">
-            <label for="tourName">Tour Name:</label>
-            <input type="text" id="tourName" name="tourName" placeholder="Enter tour name" required><br>
-    
-            <label for="artistName">Artist Name:</label>
-            <input type="text" id="artistName" name="artistName" placeholder="Enter artist name" required><br>
-
-            <label for="startDate">Start Date:</label>
-            <input type="date" id="startDate" name="startDate" required><br>
-
-            <label for="endDate">End Date:</label>
-            <input type="date" id="endDate" name="endDate" required><br>
-
-            <label for="totalConcerts">Total Concerts:</label>
-            <input type="number" id="totalConcerts" name="totalConcerts" placeholder="Enter total number of concerts" required><br>
-
-            <input type="submit" value="Edit Tour">
-        </form>
-
-        <h3>Delete Tour</h3>
-        <form action="/tour">
-            <label for="tourName">Tour Name:</label>
-            <input type="text" id="tourName" name="tourName" placeholder="Enter tour name" required><br>
-    
-            <label for="artistName">Artist Name:</label>
-            <input type="text" id="artistName" name="artistName" placeholder="Enter artist name" required><br>
-
-            <label for="startDate">Start Date:</label>
-            <input type="date" id="startDate" name="startDate" required><br>
-
-            <label for="endDate">End Date:</label>
-            <input type="date" id="endDate" name="endDate" required><br>
-
-            <label for="totalConcerts">Total Concerts:</label>
-            <input type="number" id="totalConcerts" name="totalConcerts" placeholder="Enter total number of concerts" required><br>
-
-            <input type="submit" value="Delete Tour">
         </form>
     </div>
 </body>

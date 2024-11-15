@@ -52,9 +52,10 @@ app.get('/vendors', function (req, res) {
 app.get('/concerts', function (req, res) {
     let query = `
         SELECT c.concertID, c.numTicketAvailable, c.numTicketSold, c.startDate, c.location, t.tourName, a.artistName 
-        FROM Concerts c 
+        FROM Concerts c
         JOIN Tours t ON c.tourID = t.tourID
         JOIN Artists a ON t.artistID = a.artistID
+        ORDER BY c.concertID ASC
     `;
     
     db.pool.query(query, function(error, rows, fields) {
@@ -118,10 +119,11 @@ app.get('/concertVendor', function (req, res) {
 });
 
 //Post Routes for Forms
+
 app.post('/add-artist-form', function(req, res) {
     let data = req.body;
 
-    let query1 = `INSERT INTO Artists (artistName) VALUES ('${data.artistName}')`;
+    let query1 = `INSERT INTO Artists (artistName) VALUES ('${data['artistName']}')`;
     db.pool.query(query1, function(error, rows, fields) {
         if (error) {
             console.log(error);
@@ -132,34 +134,116 @@ app.post('/add-artist-form', function(req, res) {
     });
 });
 
-app.post('/add-concert-form', function(req, res) {
+app.post('/add-vendor-form', function(req, res) {
     let data = req.body;
 
-    // Fetch the tourID from the Tours table using the provided tourName
-    let getTourIDQuery = `SELECT tourID FROM Tours WHERE tourName = '${data.tourName}'`;
-
-    db.pool.query(getTourIDQuery, function(error, rows, fields) {
-        if (error || rows.length === 0) {
-            console.log("Error finding tourID or tourName does not exist");
-            return res.sendStatus(400);  // Bad request if the tourName is not found
+    let query1 = `INSERT INTO Vendors (vendorName, vendorProduct) VALUES ('${data['vendorName']}', '${data['vendorProduct']}')`;
+    db.pool.query(query1, function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            return res.sendStatus(400);
+        } else {
+            res.redirect('/vendors'); 
         }
-
-        let tourID = rows[0].tourID;  // Get the tourID
-
-        // Now insert the concert into the Concerts table using the correct tourID
-        let query1 = `INSERT INTO Concerts (numTicketAvailable, numTicketSold, startDate, location, tourID)
-                      VALUES ('${data.ticketsAvailable}', '${data.ticketsSold}', '${data.startDate}', '${parseFloat(data.location)}', '${tourID}')`;
-
-        db.pool.query(query1, function(error, rows, fields) {
-            if (error) {
-                console.log(error);
-                return res.sendStatus(400);  // Bad request if there's an error inserting
-            } else {
-                res.redirect('/concerts');  // Redirect to the concerts page on success
-            }
-        });
     });
 });
+
+app.post('/add-concert-form', function(req, res) {
+    let data = req.body;
+    console.log(data);
+
+    let location = parseInt(data.location);
+    if (isNaN(location))
+        {
+            location = 'NULL'
+        }
+
+    let query1 = `INSERT INTO Concerts (numTicketAvailable, numTicketSold, startDate, location, tourID) 
+                  VALUES ('${data['ticketsAvailable']}', '${data['ticketsSold']}', '${data['startDate']}', '${location}',
+                  (SELECT tourID FROM Tours WHERE tourName = '${data.tourName}'))`;
+
+    db.pool.query(query1, function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            return res.sendStatus(400); 
+        } else {
+            res.redirect('/concerts'); 
+        }
+    });
+});
+
+app.post('/add-tour-form', function(req, res) {
+    let data = req.body;
+    console.log(data);
+
+    let concertTotal = parseInt(data.concertTotal);
+    if (isNaN(concertTotal))
+        {
+            concertTotal = 'NULL'
+        }
+
+    let query1 = `INSERT INTO Tours (tourName, artistID, tourStartDate, tourEndDate, concertTotal)
+                  VALUES ('${data['tourName']}', (SELECT artistID FROM Artists WHERE artistName = '${data.artistName}'),
+                  '${data['startDate']}', '${data['endDate']}', '${concertTotal}')`;
+
+    db.pool.query(query1, function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            return res.sendStatus(400); 
+        } else {
+            res.redirect('/tours'); 
+        }
+    });
+});
+
+app.post('/add-artist-to-concert-form', function(req, res) {
+    let data = req.body;
+    console.log(data);
+    
+    let concertLocation = parseInt(data.concertLocation);
+    if (isNaN(concertLocation))
+        {
+            concertLocation = 'NULL'
+        }
+
+    let query1 = `INSERT INTO ArtistConcertDetails (artistID, concertID)
+                  VALUES
+                  ((SELECT artistID FROM Artists WHERE artistName = '${data['artistName']}'), (SELECT concertID FROM Concerts WHERE location = ${concertLocation}))`;
+
+    db.pool.query(query1, function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            return res.sendStatus(400); 
+        } else {
+            res.redirect('/artistConcert'); 
+        }
+    });
+});
+
+app.post('/add-vendor-at-concert-form', function(req, res) {
+    let data = req.body;
+    console.log(data);
+    
+    let concertLocation = parseInt(data.concertLocation);
+    if (isNaN(concertLocation))
+        {
+            concertLocation = 'NULL'
+        }
+
+    let query1 = `INSERT INTO ConcertVendorDetails (vendorID, concertID)
+                  VALUES
+                  ((SELECT vendorID FROM Vendors WHERE vendorName = '${data['vendorName']}'), (SELECT concertID FROM Concerts WHERE location = ${concertLocation}))`;
+
+    db.pool.query(query1, function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            return res.sendStatus(400); 
+        } else {
+            res.redirect('/concertVendor'); 
+        }
+    });
+});
+
 
 
 

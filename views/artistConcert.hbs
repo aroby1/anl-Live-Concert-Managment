@@ -24,3 +24,17 @@
                 {{/each}}
             </tbody>
         </table>
+
+        <!-- Add Form -->
+        <h3>Add an Artist performing at a Concert</h3>
+        <p>To add a new artist performing at a concert, please enter the artists' name and concert location below then click 'Add Artist performing at a Concert' !</p>
+        <form id="add-artist-to-concert-form" action="/add-artist-to-concert-form" method="POST">
+            <label for="artistName">ArtistName Performing at a Concert:</label>
+            <input type="text" id="artistName" name="artistName" placeholder="Enter Artists' Name: " required><br>
+
+            <label for="concertLocation">Concert Location (Zip-Code):</label>
+            <input type="number" id="concertLocation" name="concertLocation" placeholder="Enter Concert Location: " required><br>
+
+            <input type="submit" value="Add Artist Performing at a Concert">
+        </form>
+    </div>
