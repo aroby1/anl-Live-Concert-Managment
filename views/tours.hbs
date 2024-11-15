@@ -33,15 +33,20 @@
         <form id="add-tour-form" action="/add-tour-form" method="POST">
             <label for="tourName">Tour Name:</label>
             <input type="text" id="tourName" name="tourName" placeholder="Enter tour name" required><br>
-    
-            <label for="artistName">Artist Name:</label>
-            <input type="text" id="artistName" name="artistName" placeholder="Enter artist name" required><br>
+
+            <label for="artistName">Artist Name: </label>
+                <select name="artistName" id="artistName">
+                    <option value="">Select an Artist</option>
+                        {{#each artists}}
+                        <option value="{{this.artistID}}">{{this.artistName}}</option>
+                        {{/each}}
+                </select><br>
 
             <label for="startDate">Start Date:</label>
-            <input type="datetime-local" id="startDate" name="startDate" required><br>
+            <input type="date" id="startDate" name="startDate" required><br>
 
             <label for="endDate">End Date:</label>
-            <input type="datetime-local" id="endDate" name="endDate" required><br>
+            <input type="date" id="endDate" name="endDate" required><br>
 
             <label for="totalConcerts">Total Concerts:</label>
             <input type="number" id="concertTotal" name="concertTotal" placeholder="Enter total number of concerts" required><br>

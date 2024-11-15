@@ -1,39 +1,52 @@
 <div class="container">
-    <h2>List of Vendors available at a Concert</h2>
+    <h2>List of Vendors Available at a Concert</h2>
         <table>
             <thead>
                 <tr>
-                    {{#each data.[0]}}
+                {{#each data.[0]}}
                     <th>
                         {{@key}}
                     </th>
-                    {{/each}}
-                    <th colspan="2">Actions</th>
-                </tr>
-            </thead>           
-        
-            <tbody>
-                {{#each data}}
-                    <tr>
-                        <td>{{ this.concertVendorID }}</td>
-                        <td>{{ this.vendorID }}</td>
-                        <td>{{ this.concertID }}</td>
-                        <td><a href="/artists">Edit</a></td>
-                        <td><a href="/artists">Delete</a></td>
-                    </tr>
                 {{/each}}
-            </tbody>
-        </table>
+                <th colspan="2">Actions</th>
+                </tr>
+            </thead>
 
-        <!-- Add Form -->
-        <h3>Add an Vendor available at a Concert</h3>
-        <p>To add a new vendor available at a concert, please enter the vendors' name and concert location below then click 'Add Vendor Available at a Concert' !</p>
-        <form id="add-vendor-at-concert-form" action="/add-vendor-at-concert-form" method="POST">
-            <label for="artistName">VendorName Available at a Concert:</label>
-            <input type="text" id="vendorName" name="vendorName" placeholder="Enter Vendors' Name: " required><br>
+        <tbody>
+            {{#each data}}
+                <tr>
+                    <td>{{this.concertVendorID}}</td>
+                    <td>{{this.concertID}}</td>
+                    <td>{{this.vendorID}}</td>
+                    <td><a href="/concertVendor">Edit</a></td>
+                    <td><a href="/concertVendor">Delete</a></td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
 
-            <label for="concertLocation">Concert Location (Zip-Code):</label>
-            <input type="number" id="concertLocation" name="concertLocation" placeholder="Enter Concert Location: " required><br>
+    <!-- Add Form -->
+    <h3>Add a Vendor Available at a Concert</h3>
+    <p>To add a new vendor available at a concert, please select the vendor's name and concert location below, then click 'Add Vendor Available at a Concert'!</p>
+    <form id="add-vendor-at-concert-form" action="/add-vendor-at-concert-form" method="POST">
+        <label for="concertLocation">Concert Location:</label>
+        <select id="concertLocation" name="concertLocation" required>
+            <option value="">Select Concert Location</option>
+            {{#each concerts}}
+                <option value="{{this.concertID}}">{{this.location}}</option>
+            {{/each}}
+        </select><br>
 
-            <input type="submit" value="Add Vendor Available at a Concert">
-        </form>
+        <label for="vendorName">Vendor Name:</label>
+        <select id="vendorName" name="vendorName" required>
+            <option value="">Select Vendor</option>
+            {{#each vendors}}
+                <option value="{{this.vendorID}}">{{this.vendorName}}</option>
+            {{/each}}
+        </select><br>
+
+        <input type="submit" value="Add Vendor Available at a Concert">
+    </form>
+</div>
+
+
