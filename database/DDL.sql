@@ -113,12 +113,12 @@ INSERT INTO Artists (`artistID`, `artistName`)
 -- Insert into Table Artists
 -- -----------------------------------------------------
 
-INSERT INTO Tours (`tourID`, `tourName`, `tourStartDate`, `tourEndDate`, `concertTotal`, `artistID`)
+INSERT INTO Tours (`tourID`, `tourName`, `artistID`, `tourStartDate`, `tourEndDate`, `concertTotal`)
     VALUES
-    ('1', 'Swift As A Coursing River', '2024-10-23', '2024-03-04', '1', (SELECT artistID FROM Artists WHERE artistName = 'Taylor Swift')),
-    ('2', 'Creation', '2024-12-25', '2025-05-12', '2', (SELECT artistID FROM Artists WHERE artistName = 'Tyler the Creator')),
-    ('3', 'Wow a Lizard', '2024-11-22', '2025-04-08', '1', (SELECT artistID FROM Artists WHERE artistName = 'King Gizzard & The Lizard Wizard')),
-    ('4', 'The Moonshine Jungle Tour', '2025-01-15', '2025-03-20', '2', (SELECT artistID FROM Artists WHERE artistName = 'Bruno Mars'));
+    ('1', 'Swift As A Coursing River', (SELECT artistID FROM Artists WHERE artistName = 'Taylor Swift'), '2024-10-23', '2024-03-04', '1'),
+    ('2', 'Creation', (SELECT artistID FROM Artists WHERE artistName = 'Tyler the Creator'), '2024-12-25', '2025-05-12', '2'),
+    ('3', 'Wow a Lizard', (SELECT artistID FROM Artists WHERE artistName = 'King Gizzard & The Lizard Wizard'), '2024-11-22', '2025-04-08', '1'),
+    ('4', 'The Moonshine Jungle Tour', (SELECT artistID FROM Artists WHERE artistName = 'Bruno Mars'), '2025-01-15', '2025-03-20', '2');
 
 -- -----------------------------------------------------
 -- Insert into Table Concerts
@@ -127,7 +127,7 @@ INSERT INTO Tours (`tourID`, `tourName`, `tourStartDate`, `tourEndDate`, `concer
 INSERT INTO Concerts (`concertID`, `numTicketAvailable`, `numTicketSold`, `startDate`, `location`, `tourID`)
     VALUES 
     ('1', 10000, 4000, '2025-12-25 9:00:00', 97068, (SELECT tourID FROM Tours WHERE tourName = 'Creation')),
-    ('2', 30000, 29000, '2025-03-04 12:00:00', 97331, (SELECT tourID FROM Tours WHERE tourName = 'Swift As A Coursing River')),
+    ('2', 50000, 29000, '2025-03-04 12:00:00', 97331, (SELECT tourID FROM Tours WHERE tourName = 'Swift As A Coursing River')),
     ('3', 20000, 7000, '2025-01-19 5:00:00', 76043, (SELECT tourID FROM Tours WHERE tourName = 'Creation')),
     ('4', 10000, 6000, '2025-04-08 6:00:00', 97303, (SELECT tourID FROM Tours WHERE tourName = 'Wow a Lizard')),
     ('5', 25000, 23000, '2025-02-10 9:00:00', 10001, (SELECT tourID FROM Tours WHERE tourName = 'The Moonshine Jungle Tour'));

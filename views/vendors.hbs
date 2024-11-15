@@ -25,9 +25,10 @@
             </tbody>
         </table>
 
-        <!-- Add/Edit/Delete Form -->
+        <!-- Add form -->
         <h3>Add Vendor</h3>
-        <form action="/vendor">
+        <p>To add a new Vendor, please enter their name and product below then click 'Submit'!</p>
+        <form id="add-vendor-form" action="/add-vendor-form" method="POST">
             <label for="vendorName">Vendor Name:</label>
             <input type="text" id="vendorName" name="vendorName" placeholder="Enter vendor name" required><br>
 
@@ -35,28 +36,6 @@
             <input type="text" id="vendorProduct" name="vendorProduct" placeholder="Enter vendor product" required><br>
 
             <input type="submit" value="Add Vendor">
-        </form>
-
-        <h3>Update Vendor</h3>
-        <form action="/vendor">
-            <label for="vendorName">Vendor Name:</label>
-            <input type="text" id="vendorName" name="vendorName" placeholder="Enter vendor name" required><br>
-
-            <label for="vendorName">Vendor Product:</label>
-            <input type="text" id="vendorProduct" name="vendorProduct" placeholder="Enter vendor product" required><br>
-
-            <input type="submit" value="Edit Vendor">
-        </form>
-
-        <h3>Delete Vendor</h3>
-        <form action="/vendor">
-            <label for="vendorName">Vendor Name:</label>
-            <input type="text" id="vendorName" name="vendorName" placeholder="Enter vendor name" required><br>
-
-            <label for="vendorName">Vendor Product:</label>
-            <input type="text" id="vendorProduct" name="vendorProduct" placeholder="Enter vendor product" required><br>
-
-            <input type="submit" value="Delete Vendor">
         </form>
     </div>
 </body>
