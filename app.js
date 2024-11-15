@@ -117,6 +117,7 @@ app.get('/concertVendor', function (req, res) {
     });
 });
 
+
 //Post Routes for Forms
 app.post('/add-artist-form', function(req, res) {
     let data = req.body;
@@ -161,6 +162,24 @@ app.post('/add-concert-form', function(req, res) {
     });
 });
 
+// DELETE request handler for deleting an artist
+app.delete('/artists/:id', async (req, res) => {
+    const artistID = req.params.id;
+
+    try {
+        // Replace this with your database deletion logic
+        const result = await db.query('DELETE FROM artists WHERE artistID = ?', [artistID]);
+
+        if (result.affectedRows > 0) {
+            res.sendStatus(200);
+        } else {
+            res.sendStatus(404); // Artist not found
+        }
+    } catch (error) {
+        console.error('Error deleting artist:', error);
+        res.sendStatus(500);
+    }
+});
 
 
 // Start the server

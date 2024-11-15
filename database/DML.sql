@@ -1,3 +1,5 @@
+-- All inserts, all deletes, all updates
+
 -- Insert into Artists table
 INSERT INTO Artists (artistName) 
 VALUES (:artistName);
@@ -25,11 +27,14 @@ VALUES (:lastArtistID, :lastConcertID);
 -- Select all from Vendors
 SELECT * FROM Vendors;
 
+-- Select all from Concerts
+SELECT * FROM Concerts;
+
 -- Select all from Artists
 SELECT * FROM Artists; 
 
 -- Select all form Tours
-SELECT * FROM Tours 
+SELECT * FROM Tours;
 
 -- Select all from ConcertVendorDetails
 SELECT * FROM ConcertVendorDetails;
@@ -37,26 +42,53 @@ SELECT * FROM ConcertVendorDetails;
 -- Select all from ArtistConcertDetails
 SELECT * FROM ArtistConcertDetails;
 
-
-SELECT * FROM Concerts
-JOIN ArtistConcertDetails ON Concert.concertID = ArtstConcertID.concertID
-JOIN Artists ON Artists.artistID = ConcertArtistTable.concertID
-WHERE Artists.artist_name = :artistName;
-
+-- Delete from Concerts based on ID
 DELETE FROM Concerts WHERE concertID = :concertID;
 
+-- Insert into ArtistConcertDetails
 INSERT INTO ArtistConcertDetails (artistID, concertID) 
 VALUES (:artistID, :concertID);
 
+-- Delete from ArtistConcertDetails
 DELETE FROM ArtistConcertDetails 
 WHERE artistID = :artistID AND concertID = :concertID;
 
+-- Insert into ConcertVendorDetails
 INSERT INTO ConcertVendorDetails (concertID, vendorID) 
 VALUES (:concertID, :vendorID);
 
+-- Delete from ConcertVendorDetails
 DELETE FROM ConcertVendorDetails 
 WHERE concertID = :concertID AND vendorID = :vendorID;
 
+-- Update Artist
+UPDATE Artists
+SET
+    artistName = :artistName
+WHERE 
+    artistID = :artistID;
+
+-- Update Vendors
+UPDATE Vendors
+SET
+    vendorName = :vendorName,
+    vendorProduct = :vendorProduct
+WHERE
+    artistID = :artistID;
+
+-- Update Tours
+UPDATE Tours 
+SET 
+    tourName = :tourName,
+    tourStartDate = :tourStartDate,
+    tourEndDate = :tourEndDate,
+    concertTotal = :concertTotal,
+    artistName = :artistName
+WHERE
+    tourID = :tourID
+
+
+-- Update Concerts
 UPDATE Concerts
 SET 
     numTicketsAvailable = :numTicketsAvailable,
@@ -67,8 +99,26 @@ SET
 WHERE 
     concertID = :concertID;
 
-INSERT INTO ConcertVendorDetails (vendorID, concertID)
-VALUES (:vendorID, :concertID);
+-- Update ArtistConcertDetails
+UPDATE ArtistConcertDetails
+SET 
+    artistID = :artistID,
+    concertID = :concertID
+WHERE
+    artistConcertID = :artistConcertID;
 
-INSERT INTO ArtistConcertDetails (artistID, concertID)
-VALUES (:artistID, :concertID);
+-- Update VendorConcertDetails
+UPDATE VendorConcertDetails
+SET 
+    artistID = :artistID,
+    concertID = :concertID
+WHERE
+    artistConcertID = :artistConcertID;
+
+
+
+-- Select from Concerts based on artist ID
+SELECT * FROM Concerts
+JOIN ArtistConcertDetails ON Concert.concertID = ArtstConcertID.concertID
+JOIN Artists ON Artists.artistID = ConcertArtistTable.concertID
+WHERE Artists.artist_name = :artistName;

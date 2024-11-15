@@ -128,3 +128,37 @@ function addRowToTable(data) {
     row.appendChild(artistCell);
     currentTable.appendChild(row);
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const table = document.getElementById("artist-table");
+
+    // Add event listener to handle delete button clicks
+    table.addEventListener("click", async (event) => {
+        if (event.target.classList.contains("delete-btn")) {
+            const row = event.target.closest("tr");
+            const artistID = row.getAttribute("data-id");
+
+            // Confirm before deleting
+            const confirmed = confirm(`Are you sure you want to delete artist with ID: ${artistID}?`);
+            if (!confirmed) return;
+
+            try {
+                // Send a DELETE request to the server
+                const response = await fetch(`/artists/${artistID}`, {
+                    method: "DELETE",
+                });
+
+                if (response.ok) {
+                    // Remove the row from the table
+                    row.remove();
+                    alert(`Artist with ID ${artistID} deleted successfully.`);
+                } else {
+                    alert(`Failed to delete artist with ID ${artistID}.`);
+                }
+            } catch (error) {
+                console.error("Error deleting artist:", error);
+                alert("An error occurred while deleting the artist.");
+            }
+        }
+    });
+});
