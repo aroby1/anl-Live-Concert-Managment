@@ -1,12 +1,3 @@
--- It should be possible to INSERT entries into every table individually. x
--- Every table should be used in at least one SELECT query. For the SELECT queries, it is fine to just display the content of the tables. x
--- It is generally not appropriate to have only a single query that joins all tables and displays them. x
--- You need to include one DELETE and one UPDATE function in your website, for any one of the entities. x
--- In addition, it should be possible to add and remove things from at least one many-to-many relationship and it should be possible to add things to all relationships. x
--- This means you need SELECT & INSERT functionalities for all relationships as well as entities. x
--- And DELETE & UPDATE for least one M:M relationship. x
--- Put another way, you need a method to SELECT, INSERT, UPDATE and DELETE the rows of an intersection table in your project. x
-
 -- Insert into Artists table
 INSERT INTO Artists (artistName) 
 VALUES (:artistName);
@@ -31,19 +22,21 @@ VALUES (:lastVendorID, :lastConcertID);
 INSERT INTO ArtistConcertDetails (artistID, concertID) 
 VALUES (:lastArtistID, :lastConcertID);
 
+-- Select all from Vendors
 SELECT * FROM Vendors;
 
+-- Select all from Artists
 SELECT * FROM Artists; 
 
+-- Select all form Tours
 SELECT * FROM Tours 
-JOIN Artists ON Tours.artistID = Artists.artistID
-WHERE Artists.artistName = :artistName;
 
-SELECT * FROM Vendors;
-
+-- Select all from ConcertVendorDetails
 SELECT * FROM ConcertVendorDetails;
 
+-- Select all from ArtistConcertDetails
 SELECT * FROM ArtistConcertDetails;
+
 
 SELECT * FROM Concerts
 JOIN ArtistConcertDetails ON Concert.concertID = ArtstConcertID.concertID
