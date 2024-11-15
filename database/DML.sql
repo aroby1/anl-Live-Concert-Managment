@@ -61,6 +61,27 @@ VALUES (:concertID, :vendorID);
 DELETE FROM ConcertVendorDetails 
 WHERE concertID = :concertID AND vendorID = :vendorID;
 
+-- Delete from Concerts based on ID
+DELETE FROM Concerts WHERE concertID = :concertID;
+
+-- Delete from ArtistConcertDetails based on artistID and concertID
+DELETE FROM ArtistConcertDetails 
+WHERE artistID = :artistID AND concertID = :concertID;
+
+-- Delete from ConcertVendorDetails based on concertID and vendorID
+DELETE FROM ConcertVendorDetails 
+WHERE concertID = :concertID AND vendorID = :vendorID;
+
+-- Delete from Artists based on artistID
+DELETE FROM Artists WHERE artistID = :artistID;
+
+-- Delete from Tours based on tourID
+DELETE FROM Tours WHERE tourID = :tourID;
+
+-- Delete from Vendors based on vendorID
+DELETE FROM Vendors WHERE vendorID = :vendorID;
+
+
 -- Update Artist
 UPDATE Artists
 SET

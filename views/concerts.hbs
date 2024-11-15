@@ -23,7 +23,7 @@
                         <td>{{ this.tourName }}</td>
                         <td>{{ this.artistName }}</td>
                         <td><a href="/artists">Edit</a></td>
-                        <td><a href="/artists">Delete</a></td>
+                        <td><a href="#" class="delete-row">Delete</a></td>
                     </tr>
                 {{/each}}
             </tbody>
@@ -54,4 +54,18 @@
         </form>
     </div>
 
-    
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add event listener to delete links
+    const deleteLinks = document.querySelectorAll('.delete-row');
+
+    deleteLinks.forEach(function(deleteLink) {
+        deleteLink.addEventListener('click', function(event) {
+            event.preventDefault(); 
+
+            const row = event.target.closest('tr');
+            row.remove();
+        });
+    });
+});
+</script>
