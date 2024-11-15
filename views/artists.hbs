@@ -1,35 +1,49 @@
 <div class="container">
     <h2>List of Artists</h2>
-        <table id="artist-table">
-            <thead>
-                <tr>
-                    {{#each data.[0]}}
-                    <th>
-                        {{@key}}
-                    </th>
-                    {{/each}}
-                    <th colspan="2">Actions</th>
+    <table id="artist-table">
+        <thead>
+            <tr>
+                <th>Artist ID</th>
+                <th>Artist Name</th>
+                <th colspan="2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each data}}
+                <tr data-id="{{this.artistID}}">
+                    <td>{{this.artistID}}</td>
+                    <td>{{this.artistName}}</td>
+                    <td><a href="/artists/{{this.artistID}}/edit">Edit</a></td>
+                    <td><a href="#" class="delete-btn">Delete</a></td>
                 </tr>
-            </thead>
+            {{/each}}
+        </tbody>
+    </table>
 
-            <tbody>
-                {{#each data}}
-                    <tr>
-                        <td>{{ this.artistID }}</td>
-                        <td>{{ this.artistName }}</td>
-                        <td><a href="/artists">Edit</a></td>
-                        <td><a href="/artists">Delete</a></td>
-                    </tr>
-                {{/each}}
-            </tbody>
-        </table>
+    <!-- Add Form -->
+    <h3>Add Artist</h3>
+    <form id="add-artist-form" action="/add-artist-form" method="POST">
+        <label for="artistName">Artist Name:</label>
+        <input type="text" id="artistName" name="artistName" placeholder="Enter artist name" required><br>
+        <input type="submit" value="Add Artist">
+    </form>
+</div>
 
-        <!-- Add Form -->
-        <h3>Add Artist</h3>
-        <p>To add a new artist, please enter their name below and click 'Add Artist'!</p>
-        <form id="add-artist-form" action="/add-artist-form" method="POST">
-            <label for="artistName">Artist Name:</label>
-            <input type="text" id="artistName" name="artistName" placeholder="Enter artist name" required><br>
-            <input type="submit" value="Add Artist">
-        </form>
-    </div>
+<script>
+    //deletes row client side
+    document.addEventListener("DOMContentLoaded", () => {
+        const deleteButtons = document.querySelectorAll(".delete-btn");
+
+        deleteButtons.forEach(button => {
+            button.addEventListener("click", function (event) {
+                event.preventDefault();
+
+                const row = button.closest("tr");
+                if (row) {
+                    row.remove();
+                }
+            });
+        });
+    });
+</script>
+

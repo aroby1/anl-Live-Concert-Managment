@@ -2,8 +2,9 @@ var express = require('express');
 var app = express();
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+const router = express.Router();
 
-PORT = 8553;
+PORT = 8543;
 
 // Database
 var db = require('./database/db-connector');
@@ -321,6 +322,10 @@ app.post('/add-vendor-at-concert-form', function(req, res) {
     });
 });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> fe29148dce52c63fea91960f6892a527acd94b7c
 // Start the server
 app.listen(PORT, function () {
     console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.');
