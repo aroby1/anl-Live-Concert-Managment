@@ -4,7 +4,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 const router = express.Router();
 
-PORT = 8543;
+PORT = 8544;
 
 // Database
 var db = require('./database/db-connector');
@@ -322,11 +322,102 @@ app.post('/add-vendor-at-concert-form', function(req, res) {
     });
 });
 
-<<<<<<< HEAD
-=======
+//Server side delete
+app.delete('/delete-artist/:id', (req, res) => {
+    const taskID = parseInt(req.params.id);
+    const query1 = 'DELETE FROM Artists WHERE ArtistID = ?';
 
->>>>>>> fe29148dce52c63fea91960f6892a527acd94b7c
+    db.pool.query(query1, [taskID], (error) => {
+        if (error) {
+            console.error("Error executing query:", error);
+            return res.status(400).send({ error: 'Failed to delete artist' });
+        }
+        else{
+        res.status(200).json({ status: 'success' });
+        }
+    });
+});
+
+app.delete('/delete-vendor/:id', (req, res) => {
+    const taskID = parseInt(req.params.id);
+    const query1 = 'DELETE FROM Vendors WHERE vendorID = ?';
+
+    db.pool.query(query1, [taskID], (error) => {
+        if (error) {
+            console.error("Error executing query:", error);
+            return res.status(400).send({ error: 'Failed to delete vendor' });
+        }
+        else{
+        res.status(200).json({ status: 'success' });
+        }
+    });
+});
+
+app.delete('/delete-tour/:id', (req, res) => {
+    const taskID = parseInt(req.params.id);
+    const query1 = 'DELETE FROM Tours WHERE tourID = ?';
+
+    db.pool.query(query1, [taskID], (error) => {
+        if (error) {
+            console.error("Error executing query:", error);
+            return res.status(400).send({ error: 'Failed to delete tour' });
+        }
+        else{
+        res.status(200).json({ status: 'success' });
+        }
+    });
+});
+
+app.delete('/delete-concert/:id', (req, res) => {
+    const taskID = parseInt(req.params.id);
+    const query1 = 'DELETE FROM Concerts WHERE concertID = ?';
+
+    db.pool.query(query1, [taskID], (error) => {
+        if (error) {
+            console.error("Error executing query:", error);
+            return res.status(400).send({ error: 'Failed to delete concert' });
+        }
+        else{
+        res.status(200).json({ status: 'success' });
+        }
+    });
+});
+
+app.delete('/delete-concert-vendor/:id', (req, res) => {
+    const taskID = parseInt(req.params.id);
+    const query1 = 'DELETE FROM ConcertVendorDetails WHERE concertVendorID = ?';
+
+    db.pool.query(query1, [taskID], (error) => {
+        if (error) {
+            console.error("Error executing query:", error);
+            return res.status(400).send({ error: 'Failed to delete concertVendor' });
+        }
+        else{
+        res.status(200).json({ status: 'success' });
+        }
+    });
+});
+
+app.delete('/delete-artist-concert/:id', (req, res) => {
+    const taskID = parseInt(req.params.id);
+    const query1 = 'DELETE FROM ArtistConcertDetails WHERE  artistConcertID = ?';
+
+    db.pool.query(query1, [taskID], (error) => {
+        if (error) {
+            console.error("Error executing query:", error);
+            return res.status(400).send({ error: 'Failed to delete  artistConcert' });
+        }
+        else{
+        res.status(200).json({ status: 'success' });
+        }
+    });
+});
+
 // Start the server
-app.listen(PORT, function () {
-    console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.');
+// app.listen(PORT, function () {
+//     console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.');
+// });
+
+app.listen(PORT, 'localhost', function () {
+    console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.');
 });

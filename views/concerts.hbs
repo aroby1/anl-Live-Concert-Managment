@@ -14,7 +14,7 @@
 
             <tbody>
                 {{#each data}}
-                    <tr>
+                    <tr data-id="{{this.concertID}}">
                         <td>{{ this.concertID }}</td>
                         <td>{{ this.numTicketAvailable }}</td>
                         <td>{{ this.numTicketSold }}</td>
@@ -23,7 +23,7 @@
                         <td>{{ this.tourName }}</td>
                         <td>{{ this.artistName }}</td>
                         <td><a href="/artists">Edit</a></td>
-                        <td><a href="#" class="delete-row">Delete</a></td>
+                        <td><a href="#" class="delete-btn">Delete</a></td>
                     </tr>
                 {{/each}}
             </tbody>
@@ -65,16 +65,24 @@
     </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Add event listener to delete links
-    const deleteLinks = document.querySelectorAll('.delete-row');
+document.addEventListener("DOMContentLoaded", () => {
+    const deleteButtons = document.querySelectorAll(".delete-btn");
 
-    deleteLinks.forEach(function(deleteLink) {
-        deleteLink.addEventListener('click', function(event) {
-            event.preventDefault(); 
+    deleteButtons.forEach(button => {
+        button.addEventListener("click", async function (event) {
+            event.preventDefault();
 
-            const row = event.target.closest('tr');
-            row.remove();
+            const row = button.closest("tr");
+            const id = row.getAttribute("concert-id");
+            row.remove(); 
+
+            try {
+                const response = await fetch(`/delete-concert/${id}`, {
+                    method: 'DELETE',
+                });
+            } catch (error) {
+                console.error("Error:", error);
+            }
         });
     });
 });
