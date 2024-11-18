@@ -34,9 +34,11 @@
     document.addEventListener("DOMContentLoaded", () => {
         const deleteButtons = document.querySelectorAll(".delete-btn");
 
+
         deleteButtons.forEach(button => {
             button.addEventListener("click", function (event) {
                 event.preventDefault();
+
 
                 const row = button.closest("tr");
                 if (row) {
@@ -45,5 +47,3 @@
             });
         });
     });
-</script>
-

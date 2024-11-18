@@ -127,7 +127,7 @@ INSERT INTO Tours (`tourID`, `tourName`, `artistID`, `tourStartDate`, `tourEndDa
 INSERT INTO Concerts (`concertID`, `numTicketAvailable`, `numTicketSold`, `startDate`, `location`, `tourID`)
     VALUES 
     ('1', 10000, 4000, '2025-12-25 9:00:00', 97068, (SELECT tourID FROM Tours WHERE tourName = 'Creation')),
-    ('2', 50000, 29000, '2025-03-04 12:00:00', 97331, (SELECT tourID FROM Tours WHERE tourName = 'Swift As A Coursing River')),
+    ('2', 30000, 29000, '2025-03-04 12:00:00', 97331, (SELECT tourID FROM Tours WHERE tourName = 'Swift As A Coursing River')),
     ('3', 20000, 7000, '2025-01-19 5:00:00', 76043, (SELECT tourID FROM Tours WHERE tourName = 'Creation')),
     ('4', 10000, 6000, '2025-04-08 6:00:00', 97303, (SELECT tourID FROM Tours WHERE tourName = 'Wow a Lizard')),
     ('5', 25000, 23000, '2025-02-10 9:00:00', 10001, (SELECT tourID FROM Tours WHERE tourName = 'The Moonshine Jungle Tour'));

@@ -19,7 +19,7 @@
                         <td>{{ this.vendorName }}</td>
                         <td>{{ this.vendorProduct }}</td>
                         <td><a href="/artists">Edit</a></td>
-                        <td><a href="#" class="delete-row">Delete</a></td>
+                        <td><a href="/artists">Delete</a></td>
                     </tr>
                 {{/each}}
             </tbody>
@@ -27,12 +27,12 @@
 
         <!-- Add form -->
         <h3>Add Vendor</h3>
-        <p>To add a new Vendor, please enter their name and product below then click 'Submit'!</p>
+        <p>To add a new Vendor, please enter their name and product below then click 'Add Vendor'!</p>
         <form id="add-vendor-form" action="/add-vendor-form" method="POST">
             <label for="vendorName">Vendor Name:</label>
             <input type="text" id="vendorName" name="vendorName" placeholder="Enter vendor name" required><br>
 
-            <label for="vendorName">Vendor Product:</label>
+            <label for="vendorProduct">Vendor Product:</label>
             <input type="text" id="vendorProduct" name="vendorProduct" placeholder="Enter vendor product" required><br>
 
             <input type="submit" value="Add Vendor">
@@ -40,18 +40,3 @@
     </div>
 </body>
 </html>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const deleteLinks = document.querySelectorAll('.delete-row');
-
-    deleteLinks.forEach(function(deleteLink) {
-        deleteLink.addEventListener('click', function(event) {
-            event.preventDefault();
-            const row = event.target.closest('tr');
-
-                row.remove();
-        });
-    });
-});
-</script>
