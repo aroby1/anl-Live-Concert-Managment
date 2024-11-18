@@ -14,7 +14,7 @@
 
             <tbody>
                 {{#each data}}
-                    <tr>
+                    <tr data-id="{{this.concertID}}">
                         <td>{{ this.concertID }}</td>
                         <td>{{ this.numTicketAvailable }}</td>
                         <td>{{ this.numTicketSold }}</td>
@@ -23,7 +23,7 @@
                         <td>{{ this.tourName }}</td>
                         <td>{{ this.artistName }}</td>
                         <td><a href="/artists">Edit</a></td>
-                        <td><a href="/artists">Delete</a></td>
+                        <td><a href="#" class="delete-btn">Delete</a></td>
                     </tr>
                 {{/each}}
             </tbody>
@@ -65,4 +65,26 @@
         </form>
     </div>
 
-    
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const deleteButtons = document.querySelectorAll(".delete-btn");
+
+    deleteButtons.forEach(button => {
+        button.addEventListener("click", async function (event) {
+            event.preventDefault();
+
+            const row = button.closest("tr");
+            const id = row.getAttribute("concert-id");
+            row.remove(); 
+
+            try {
+                const response = await fetch(`/delete-concert/${id}`, {
+                    method: 'DELETE',
+                });
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        });
+    });
+});
+</script>

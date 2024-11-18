@@ -14,12 +14,12 @@
 
             <tbody>
                 {{#each data}}
-                    <tr>
+                    <tr data-id = {{this.vendorID}}>
                         <td>{{ this.vendorID }}</td>
                         <td>{{ this.vendorName }}</td>
                         <td>{{ this.vendorProduct }}</td>
                         <td><a href="/artists">Edit</a></td>
-                        <td><a href="/artists">Delete</a></td>
+                        <td><a href="#" class="delete-btn">Delete</a></td>
                     </tr>
                 {{/each}}
             </tbody>
@@ -40,3 +40,27 @@
     </div>
 </body>
 </html>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const deleteButtons = document.querySelectorAll(".delete-btn");
+
+    deleteButtons.forEach(button => {
+        button.addEventListener("click", async function (event) {
+            event.preventDefault();
+
+            const row = button.closest("tr");
+            const artistId = row.getAttribute("data-id");
+            row.remove(); 
+
+            try {
+                const response = await fetch(`/delete-vendor/${artistId}`, {
+                    method: 'DELETE',
+                });
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        });
+    });
+});
+</script>

@@ -7,6 +7,23 @@
                     <th>
                         {{@key}}
                     </th>
+<<<<<<< HEAD
+=======
+                    {{/each}}
+                    <th colspan="2">Actions</th>
+                </tr>
+            </thead>           
+        
+            <tbody>
+                {{#each data}}
+                    <tr>
+                        <td>{{ this.concertVendorID }}</td>
+                        <td>{{ this.vendorID }}</td>
+                        <td>{{ this.concertID }}</td>
+                        <td><a href="/artists">Edit</a></td>
+                        <td><a href="#" class="delete-row">Delete</a></td>
+                    </tr>
+>>>>>>> 39bc277877e6be716cc0d51f350fd5d1ea17b773
                 {{/each}}
                 <th colspan="2">Actions</th>
                 </tr>
@@ -14,7 +31,7 @@
 
         <tbody>
             {{#each data}}
-                <tr>
+                <tr data-id = {{"this.concertVendorID"}}>
                     <td>{{this.concertVendorID}}</td>
                     <td>{{this.concertID}}</td>
                     <td>{{this.vendorID}}</td>
@@ -49,15 +66,32 @@
     </form>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const deleteLinks = document.querySelectorAll('.delete-row');
+<<<<<<< HEAD
+=======
 
-    deleteLinks.forEach(function(deleteLink) {
-        deleteLink.addEventListener('click', function(event) {
+            <input type="submit" value="Add Vendor Available at a Concert">
+        </form>
+
+>>>>>>> 39bc277877e6be716cc0d51f350fd5d1ea17b773
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const deleteButtons = document.querySelectorAll(".delete-btn");
+
+    deleteButtons.forEach(button => {
+        button.addEventListener("click", async function (event) {
             event.preventDefault();
-            const row = event.target.closest('tr');
-                row.remove();
+
+            const row = button.closest("tr");
+            const artistId = row.getAttribute("data-id");
+            row.remove(); 
+
+            try {
+                const response = await fetch(`/delete-concert-vendor/${artistId}`, {
+                    method: 'DELETE',
+                });
+            } catch (error) {
+                console.error("Error:", error);
+            }
         });
     });
 });

@@ -1,71 +1,65 @@
 <div class="container">
-    <h2>List of Artists Performing at a Concert</h2>
+    <h2>List of Artists performing at a Concert</h2>
     <table>
         <thead>
-                <tr>
-                    {{#each data.[0]}}
-                    <th>
-                        {{@key}}
-                    </th>
-                    {{/each}}
-                    <th colspan="2">Actions</th>
-                </tr>
-            </thead>
-
+            <tr>
+                {{#each data.[0]}}
+                <th>
+                    {{@key}}
+                </th>
+                {{/each}}
+                <th colspan="2">Actions</th>
+            </tr>
+        </thead>
+    
         <tbody>
             {{#each data}}
-                <tr>
-                    <td>{{this.artistConcertID}}</td>
-                    <td>{{this.artistID}}</td>
-                    <td>{{this.concertID}}</td>
-                    <td><a href="/artistConcert">Edit</a></td>
-                    <td><a href="/artistConcert">Delete</a></td>
+                <tr data-id="{{this.artistConcertID}}">
+                    <td>{{ this.artistConcertID }}</td>
+                    <td>{{ this.artistID }}</td>
+                    <td>{{ this.concertID }}</td>
+                    <td><a href="/artists">Edit</a></td>
+                    <td><a href="#" class="delete-btn">Delete</a></td>
                 </tr>
             {{/each}}
         </tbody>
     </table>
 
     <!-- Add Form -->
-    <h3>Add an Artist Performing at a Concert</h3>
-    <p>To add a new artist performing at a concert, please select the artist and concert, then click 'Add Artist Performing at a Concert'!</p>
+    <h3>Add an Artist performing at a Concert</h3>
+    <p>To add a new artist performing at a concert, please enter the artist's name and concert location below then click 'Add Artist performing at a Concert'!</p>
     <form id="add-artist-to-concert-form" action="/add-artist-to-concert-form" method="POST">
-        <label for="artistName">Artist ID: </label>
-        <select name="artistName" id="artistName">
-            <option value="">Select an Artist:</option>
-            {{#each artist}}
-                <option value="{{this.artistID}}">{{this.artistName}}</option>
-            {{/each}}
-        </select><br>
+        <label for="artistName">Artist Name Performing at a Concert:</label>
+        <input type="text" id="artistName" name="artistName" placeholder="Enter Artist's Name:" required><br>
 
-        <label for="concertLocation">Concert ID: </label>
-        <select name="concertLocation" id="concertLocation">
-            <option value="">Select a Concert:</option>
-            {{#each concert}}
-                <option value="{{this.concertID}}">{{this.location}}</option>
-            {{/each}}
-        </select><br>
+        <label for="concertLocation">Concert Location (Zip-Code):</label>
+        <input type="number" id="concertLocation" name="concertLocation" placeholder="Enter Concert Location:" required><br>
 
         <input type="submit" value="Add Artist Performing at a Concert">
     </form>
 </div>
 
-
 <script>
     // Deletes row client-side
-    document.addEventListener("DOMContentLoaded", () => {
-        const deleteButtons = document.querySelectorAll(".delete-btn");
+document.addEventListener("DOMContentLoaded", () => {
+    const deleteButtons = document.querySelectorAll(".delete-btn");
 
+    deleteButtons.forEach(button => {
+        button.addEventListener("click", async function (event) {
+            event.preventDefault();
 
-        deleteButtons.forEach(button => {
-            button.addEventListener("click", function (event) {
-                event.preventDefault();
+            const row = button.closest("tr");
+            const artistId = row.getAttribute("data-id");
+            row.remove(); 
 
-
-                const row = button.closest("tr");
-                if (row) {
-                    row.remove();
-                }
-            });
+            try {
+                const response = await fetch(`/delete-artist-concert/${artistId}`, {
+                    method: 'DELETE',
+                });
+            } catch (error) {
+                console.error("Error:", error);
+            }
         });
     });
+});
 </script>

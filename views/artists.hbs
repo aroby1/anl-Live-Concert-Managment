@@ -30,20 +30,27 @@
 </div>
 
 <script>
-    //deletes row client side
-    document.addEventListener("DOMContentLoaded", () => {
-        const deleteButtons = document.querySelectorAll(".delete-btn");
+//Artists Delete
+document.addEventListener("DOMContentLoaded", () => {
+    const deleteButtons = document.querySelectorAll(".delete-btn");
 
+    deleteButtons.forEach(button => {
+        button.addEventListener("click", async function (event) {
+            event.preventDefault();
 
-        deleteButtons.forEach(button => {
-            button.addEventListener("click", function (event) {
-                event.preventDefault();
+            const row = button.closest("tr");
+            const artistId = row.getAttribute("data-id");
+            row.remove(); 
 
-
-                const row = button.closest("tr");
-                if (row) {
-                    row.remove();
-                }
-            });
+            try {
+                const response = await fetch(`/delete-artist/${artistId}`, {
+                    method: 'DELETE',
+                });
+            } catch (error) {
+                console.error("Error:", error);
+            }
         });
     });
+});
+</script>
+
