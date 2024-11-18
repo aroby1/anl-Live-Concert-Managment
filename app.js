@@ -415,10 +415,10 @@ app.delete('/delete-artist-concert/:id', (req, res) => {
 });
 
 // Start the server
-// app.listen(PORT, function () {
-//     console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.');
-// });
-
-app.listen(PORT, 'localhost', function () {
-    console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.');
+app.listen(PORT, function () {
+    console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.');
 });
+
+// app.listen(PORT, 'localhost', function () {
+//     console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.');
+// });

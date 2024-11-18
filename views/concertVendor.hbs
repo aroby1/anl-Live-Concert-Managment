@@ -7,28 +7,11 @@
                     <th>
                         {{@key}}
                     </th>
-<<<<<<< HEAD
-=======
                     {{/each}}
                     <th colspan="2">Actions</th>
                 </tr>
             </thead>           
-        
-            <tbody>
-                {{#each data}}
-                    <tr>
-                        <td>{{ this.concertVendorID }}</td>
-                        <td>{{ this.vendorID }}</td>
-                        <td>{{ this.concertID }}</td>
-                        <td><a href="/artists">Edit</a></td>
-                        <td><a href="#" class="delete-row">Delete</a></td>
-                    </tr>
->>>>>>> 39bc277877e6be716cc0d51f350fd5d1ea17b773
-                {{/each}}
-                <th colspan="2">Actions</th>
-                </tr>
-            </thead>
-
+    
         <tbody>
             {{#each data}}
                 <tr data-id = {{"this.concertVendorID"}}>
@@ -66,13 +49,6 @@
     </form>
 </div>
 
-<<<<<<< HEAD
-=======
-
-            <input type="submit" value="Add Vendor Available at a Concert">
-        </form>
-
->>>>>>> 39bc277877e6be716cc0d51f350fd5d1ea17b773
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     const deleteButtons = document.querySelectorAll(".delete-btn");

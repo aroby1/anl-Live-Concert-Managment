@@ -26,18 +26,31 @@
     </table>
 
     <!-- Add Form -->
-    <h3>Add an Artist performing at a Concert</h3>
-    <p>To add a new artist performing at a concert, please enter the artist's name and concert location below then click 'Add Artist performing at a Concert'!</p>
+    <h3>Add an Artist Performing at a Concert</h3>
+    <p>To add a new artist performing at a concert, please select the artist and concert, then click 'Add Artist Performing at a Concert'!</p>
     <form id="add-artist-to-concert-form" action="/add-artist-to-concert-form" method="POST">
-        <label for="artistName">Artist Name Performing at a Concert:</label>
-        <input type="text" id="artistName" name="artistName" placeholder="Enter Artist's Name:" required><br>
+        <label for="artistName">Artist ID: </label>
+        <select name="artistName" id="artistName">
+            <option value="">Select an Artist:</option>
+            {{#each artist}}
+                <option value="{{this.artistID}}">{{this.artistName}}</option>
+            {{/each}}
+        </select><br>
 
-        <label for="concertLocation">Concert Location (Zip-Code):</label>
-        <input type="number" id="concertLocation" name="concertLocation" placeholder="Enter Concert Location:" required><br>
+
+        <label for="concertLocation">Concert ID: </label>
+        <select name="concertLocation" id="concertLocation">
+            <option value="">Select a Concert:</option>
+            {{#each concert}}
+                <option value="{{this.concertID}}">{{this.location}}</option>
+            {{/each}}
+        </select><br>
+
 
         <input type="submit" value="Add Artist Performing at a Concert">
     </form>
 </div>
+
 
 <script>
     // Deletes row client-side
