@@ -116,7 +116,7 @@ app.get('/concerts', function (req, res) {
     });
 });
 
-
+//Route for intersection table between Artists and Concerts
 app.get('/artistConcert', function (req, res) {
     let query1 = `
         SELECT ac.artistConcertID, ac.artistID, ac.concertID
@@ -155,6 +155,7 @@ app.get('/artistConcert', function (req, res) {
     });
 });
 
+//Route for intersection table between Concerts and Vendors
 app.get('/concertVendor', function (req, res) {
     let query1 = `
         SELECT cv.concertVendorID, c.concertID, v.vendorID
@@ -432,10 +433,10 @@ app.delete('/delete-artist-concert/:id', (req, res) => {
 
 
 // Start the server
-// app.listen(PORT, function () {
-//     console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.');
-// });
-
-app.listen(PORT, 'localhost', function () {
-    console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.');
+app.listen(PORT, function () {
+    console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.');
 });
+
+// app.listen(PORT, 'localhost', function () {
+//     console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.');
+// });
