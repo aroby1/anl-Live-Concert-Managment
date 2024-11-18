@@ -11,29 +11,14 @@
                     <th colspan="2">Actions</th>
                 </tr>
             </thead>           
-        
-            <tbody>
-                {{#each data}}
-                    <tr>
-                        <td>{{ this.concertVendorID }}</td>
-                        <td>{{ this.vendorID }}</td>
-                        <td>{{ this.concertID }}</td>
-                        <td><a href="/artists">Edit</a></td>
-                        <td><a href="#" class="delete-row">Delete</a></td>
-                    </tr>
-                {{/each}}
-                <th colspan="2">Actions</th>
-                </tr>
-            </thead>
-
         <tbody>
             {{#each data}}
                 <tr data-id = {{"this.concertVendorID"}}>
                     <td>{{this.concertVendorID}}</td>
                     <td>{{this.concertID}}</td>
                     <td>{{this.vendorID}}</td>
-                    <td><a href="/concertVendor">Edit</a></td>
-                    <td><a href="/concertVendor">Delete</a></td>
+                    <td><a href="#" class="edit-btn">Edit</a></td>
+                    <td><a href="#" class="delete-btn">Delete</a></td>
                 </tr>
             {{/each}}
         </tbody>
@@ -61,15 +46,40 @@
 
         <input type="submit" value="Add Vendor Available at a Concert">
     </form>
+        
+<div id="popupMenu" class="popup">
+<div class="popup-content">
+    <form id="add-vendor-at-concert-form" action="/update-vendor-at-concert-form" method="POST">
+        <label for="concertLocation">Concert Location:</label>
+        <select id="concertLocation" name="concertLocation" required>
+            <option value="">Select Concert Location</option>
+            {{#each concerts}}
+                <option value="{{this.concertID}}">{{this.location}}</option>
+            {{/each}}
+        </select><br>
+
+        <label for="vendorName">Vendor Name:</label>
+        <select id="vendorName" name="vendorName" required>
+            <option value="">Select Vendor</option>
+            {{#each vendors}}
+                <option value="{{this.vendorID}}">{{this.vendorName}}</option>
+            {{/each}}
+        </select><br>
+
+        <input type="submit" value="Update Vendor Available at a Concert">
+<span id="closePopup" class="close">&times;</span>
+<button id="closeButton">Close</button>
 </div>
-
-
-            <input type="submit" value="Add Vendor Available at a Concert">
-        </form>
+</div>
+    </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     const deleteButtons = document.querySelectorAll(".delete-btn");
+    const editButtons = document.querySelectorAll(".edit-btn");
+    const popupMenu = document.getElementById("popupMenu");
+    const closePopup = document.getElementById("closePopup");
+    const closeButton = document.getElementById("closeButton");
 
     deleteButtons.forEach(button => {
         button.addEventListener("click", async function (event) {
@@ -87,6 +97,29 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error("Error:", error);
             }
         });
+    });
+        // Open Popup Menu on Edit
+    editButtons.forEach(button => {
+        button.addEventListener("click", (event) => {
+            event.preventDefault();
+            popupMenu.style.display = "flex";
+        });
+    });
+
+    // Close Popup Menu
+    closePopup.addEventListener("click", () => {
+        popupMenu.style.display = "none";
+    });
+
+    closeButton.addEventListener("click", () => {
+        popupMenu.style.display = "none";
+    });
+
+    // Close Popup Menu when clicking outside the content area
+    window.addEventListener("click", (event) => {
+        if (event.target === popupMenu) {
+            popupMenu.style.display = "none";
+        }
     });
 });
 </script>

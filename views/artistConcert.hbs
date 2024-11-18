@@ -18,7 +18,7 @@
                     <td>{{ this.artistConcertID }}</td>
                     <td>{{ this.artistID }}</td>
                     <td>{{ this.concertID }}</td>
-                    <td><a href="/artists">Edit</a></td>
+                    <td><a href="#" class="edit-btn">Edit</a></td>
                     <td><a href="#" class="delete-btn">Delete</a></td>
                 </tr>
             {{/each}}
@@ -37,12 +37,32 @@
 
         <input type="submit" value="Add Artist Performing at a Concert">
     </form>
+
+<div id="popupMenu" class="popup">
+    <div class="popup-content">
+        <form id="update-artist-to-concert-form" action="/update-artist-to-concert-form" method="POST">
+        <label for="artistName">Artist Name Performing at a Concert:</label>
+        <input type="text" id="artistName" name="artistName" placeholder="Enter Artist's Name:" required><br>
+
+        <label for="concertLocation">Concert Location (Zip-Code):</label>
+        <input type="number" id="concertLocation" name="concertLocation" placeholder="Enter Concert Location:" required><br>
+
+        <input type="submit" value="Update Artist Performing at a Concert">
+    </form>
+        <span id="closePopup" class="close">&times;</span>
+        <button id="closeButton">Close</button>
+    </div>
+</div>
 </div>
 
 <script>
     // Deletes row client-side
 document.addEventListener("DOMContentLoaded", () => {
     const deleteButtons = document.querySelectorAll(".delete-btn");
+    const editButtons = document.querySelectorAll(".edit-btn");
+    const popupMenu = document.getElementById("popupMenu");
+    const closePopup = document.getElementById("closePopup");
+    const closeButton = document.getElementById("closeButton");
 
     deleteButtons.forEach(button => {
         button.addEventListener("click", async function (event) {
@@ -60,6 +80,31 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error("Error:", error);
             }
         });
+    });
+
+
+    // Open Popup Menu on Edit
+    editButtons.forEach(button => {
+        button.addEventListener("click", (event) => {
+            event.preventDefault();
+            popupMenu.style.display = "flex";
+        });
+    });
+
+    // Close Popup Menu
+    closePopup.addEventListener("click", () => {
+        popupMenu.style.display = "none";
+    });
+
+    closeButton.addEventListener("click", () => {
+        popupMenu.style.display = "none";
+    });
+
+    // Close Popup Menu when clicking outside the content area
+    window.addEventListener("click", (event) => {
+        if (event.target === popupMenu) {
+            popupMenu.style.display = "none";
+        }
     });
 });
 </script>

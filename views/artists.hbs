@@ -13,7 +13,7 @@
                 <tr data-id="{{this.artistID}}">
                     <td>{{this.artistID}}</td>
                     <td>{{this.artistName}}</td>
-                    <td><a href="/artists/{{this.artistID}}/edit">Edit</a></td>
+                    <td><a href="#" class="edit-btn">Edit</a></td>
                     <td><a href="#" class="delete-btn">Delete</a></td>
                 </tr>
             {{/each}}
@@ -29,28 +29,75 @@
     </form>
 </div>
 
+<div id="popupMenu" class="popup">
+  <div class="popup-content">
+    <span id="closePopup" class="close">&times;</span>
+    <h3>Update Artist</h3>
+    <form id="update-artist-form" action="/update-artist-form" method="POST">
+        <input type="hidden" id="artistID" name="artistID"> 
+        <label for="artistName">Artist Name:</label>
+        <input type="text" id="artistName" name="artistName" placeholder="Enter artist name" required><br>
+        <input type="submit" value="Update Artist">
+    </form>
+    <button id="closeButton">Close</button>
+  </div>
+</div>
+
+
 <script>
-//Artists Delete
+// Artists Delete
 document.addEventListener("DOMContentLoaded", () => {
     const deleteButtons = document.querySelectorAll(".delete-btn");
+    const editButtons = document.querySelectorAll(".edit-btn");
+    const popupMenu = document.getElementById("popupMenu");
+    const closePopup = document.getElementById("closePopup");
+    const closeButton = document.getElementById("closeButton");
 
+    // Delete Artist
     deleteButtons.forEach(button => {
         button.addEventListener("click", async function (event) {
             event.preventDefault();
 
             const row = button.closest("tr");
             const artistId = row.getAttribute("data-id");
-            row.remove(); 
 
             try {
                 const response = await fetch(`/delete-artist/${artistId}`, {
                     method: 'DELETE',
                 });
+                if (response.ok) {
+                    row.remove(); 
+                } else {
+                    console.error("Failed to delete artist");
+                }
             } catch (error) {
                 console.error("Error:", error);
             }
         });
     });
+
+    // Open Popup Menu on Edit
+    editButtons.forEach(button => {
+        button.addEventListener("click", (event) => {
+            event.preventDefault();
+            popupMenu.style.display = "flex";
+        });
+    });
+
+    // Close Popup Menu
+    closePopup.addEventListener("click", () => {
+        popupMenu.style.display = "none";
+    });
+
+    closeButton.addEventListener("click", () => {
+        popupMenu.style.display = "none";
+    });
+
+    // Close Popup Menu when clicking outside the content area
+    window.addEventListener("click", (event) => {
+        if (event.target === popupMenu) {
+            popupMenu.style.display = "none";
+        }
+    });
 });
 </script>
-

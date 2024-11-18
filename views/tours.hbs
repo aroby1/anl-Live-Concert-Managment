@@ -21,7 +21,7 @@
                     <td>{{ this.tourEndDate }}</td>
                     <td>{{ this.concertTotal }}</td>
                     <td>{{ this.artistName }}</td>
-                    <td><a href="/artists">Edit</a></td>
+                    <td><a href="#" class="edit-btn">Edit</a></td>
                     <td><a href="#" class="delete-row">Delete</a></td>
                 </tr>
             {{/each}}
@@ -54,12 +54,46 @@
             <input type="submit" value="Add Tour">
         </form>
     </div>
+
+<div id="popupMenu" class="popup">
+<div class="popup-content">
+    <form id="add-tour-form" action="/update-tour-form" method="POST">
+            <label for="tourName">Tour Name:</label>
+            <input type="text" id="tourName" name="tourName" placeholder="Enter tour name" required><br>
+
+            <label for="artistName">Artist Name: </label>
+                <select name="artistName" id="artistName">
+                    <option value="">Select an Artist</option>
+                        {{#each artists}}
+                        <option value="{{this.artistID}}">{{this.artistName}}</option>
+                        {{/each}}
+                </select><br>
+
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate" name="startDate" required><br>
+
+            <label for="endDate">End Date:</label>
+            <input type="date" id="endDate" name="endDate" required><br>
+
+            <label for="totalConcerts">Total Concerts:</label>
+            <input type="number" id="concertTotal" name="concertTotal" placeholder="Enter total number of concerts" required><br>
+
+            <input type="submit" value="Update Tour">
+        </form>
+<span id="closePopup" class="close">&times;</span>
+<button id="closeButton">Close</button>
+</div>
+</div>
 </body>
 </html>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     const deleteButtons = document.querySelectorAll(".delete-btn");
+    const editButtons = document.querySelectorAll(".edit-btn");
+    const popupMenu = document.getElementById("popupMenu");
+    const closePopup = document.getElementById("closePopup");
+    const closeButton = document.getElementById("closeButton");
 
     deleteButtons.forEach(button => {
         button.addEventListener("click", async function (event) {
@@ -77,6 +111,29 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error("Error:", error);
             }
         });
+    });
+        // Open Popup Menu on Edit
+    editButtons.forEach(button => {
+        button.addEventListener("click", (event) => {
+            event.preventDefault();
+            popupMenu.style.display = "flex";
+        });
+    });
+
+    // Close Popup Menu
+    closePopup.addEventListener("click", () => {
+        popupMenu.style.display = "none";
+    });
+
+    closeButton.addEventListener("click", () => {
+        popupMenu.style.display = "none";
+    });
+
+    // Close Popup Menu when clicking outside the content area
+    window.addEventListener("click", (event) => {
+        if (event.target === popupMenu) {
+            popupMenu.style.display = "none";
+        }
     });
 });
 </script>

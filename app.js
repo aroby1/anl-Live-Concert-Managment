@@ -413,6 +413,24 @@ app.delete('/delete-artist-concert/:id', (req, res) => {
     });
 });
 
+//Updates
+// app.post('/update-artist-form', function(req, res) {
+//     const { artistName, artistID } = req.body;
+//     const query = `UPDATE Artists SET artistName = ? WHERE artistID = ?;`;
+    
+//     db.pool.query(query, [artistName, artistID], function(error, results) {
+//         if (error) {
+//             console.error("Error updating artist:", error);
+//             res.status(500).send("Server Error");
+//         } else {
+//             res.redirect('/artists'); 
+//         }
+//     });
+// });
+
+
+
+
 // Start the server
 // app.listen(PORT, function () {
 //     console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.');
