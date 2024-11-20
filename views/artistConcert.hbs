@@ -1,5 +1,5 @@
 <div class="container">
-    <h2>List of Artists Performing at a Concert</h2>
+    <h2>List of Artists performing at a Concert</h2>
     <table>
         <thead>
             <tr>
@@ -11,119 +11,109 @@
                 <th colspan="2">Actions</th>
             </tr>
         </thead>
+    
         <tbody>
             {{#each data}}
-            <tr data-id="{{this.artistConcertID}}" data-artistID="{{this.artistID}}" data-concertID="{{this.concertID}}">
-                <td>{{this.artistConcertID}}</td>
-                <td>{{this.artistID}}</td>
-                <td>{{this.concertID}}</td>
-                <td><a href="#" class="edit-btn">Edit</a></td>
-                <td><a href="#" class="delete-btn">Delete</a></td>
-            </tr>
+                <tr data-id="{{this.artistConcertID}}">
+                    <td>{{ this.artistConcertID }}</td>
+                    <td>{{ this.artistID }}</td>
+                    <td>{{ this.concertID }}</td>
+                    <td><a href="#" class="edit-btn">Edit</a></td>
+                    <td><a href="#" class="delete-btn">Delete</a></td>
+                </tr>
             {{/each}}
         </tbody>
     </table>
 
-<!-- Add Form -->
-<h3>Add an Artist Performing at a Concert Location</h3>
-<p>Select an artist and concert location, then click "Add Artist Performing at a Concert".</p>
-<form id="add-artist-to-concert-form" action="/add-artist-to-concert-form" method="POST">
-    <label for="artistID">Artist:</label>
-    <select name="artistID" id="artistID" aria-label="Select an artist">
-        <option value="">Select an Artist</option>
-        {{#each artist}}
-        <option value="{{this.artistID}}">{{this.artistName}}</option>
-        {{/each}}
-    </select><br>
-
-    <label for="concertID">Concert Location:</label>
-    <select name="concertID" id="concertID" aria-label="Select a concert location">
-        <option value="">Select a Concert Location</option>
-        {{#each concert}}
-        <option value="{{this.concertID}}">{{this.location}}</option>
-        {{/each}}
-    </select><br>
-
-    <input type="submit" value="Add Artist Performing at a Concert Location">
-</form>
+    <!-- Add Form -->
+    <h3>Add an Artist Performing at a Concert</h3>
+    <p>To add a new artist performing at a concert, please select the artist and concert, then click 'Add Artist Performing at a Concert'!</p>
+    <form id="add-artist-to-concert-form" action="/add-artist-to-concert-form" method="POST">
+        <label for="artistName">Artist ID: </label>
+        <select name="artistName" id="artistName">
+            <option value="">Select an Artist:</option>
+            {{#each artist}}
+                <option value="{{this.artistID}}">{{this.artistName}}</option>
+            {{/each}}
+        </select><br>
 
 
-    <!-- Popup Menu -->
-    <div id="popupMenu" class="popup">
-        <div class="popup-content">
-            <span id="closePopup" class="close">&times;</span>
-            <h3>Update Artist Performing at a Concert</h3>
-            <form id="update-artist-to-concert-form" method="POST">
-                <label for="updateArtistName">Artist:</label>
-                <select name="artistName" id="updateArtistName" aria-label="Update artist">
-                    <option value="">Select an Artist</option>
-                    {{#each artist}}
-                    <option value="{{this.artistID}}">{{this.artistName}}</option>
-                    {{/each}}
-                </select><br>
+        <label for="concertLocation">Concert ID: </label>
+        <select name="concertLocation" id="concertLocation">
+            <option value="">Select a Concert:</option>
+            {{#each concert}}
+                <option value="{{this.concertID}}">{{this.location}}</option>
+            {{/each}}
+        </select><br>
 
-                <label for="updateConcertLocation">Concert location:</label>
-                <select name="concertLocation" id="updateConcertLocation" aria-label="Update concert">
-                    <option value="">Select a Concert location</option>
-                    {{#each concert}}
-                    <option value="{{this.concertID}}">{{this.location}}</option>
-                    {{/each}}
-                </select><br>
 
-                <input type="submit" value="Update Artist Performing at a Concert location">
-            </form>
-            <button id="closeButton">Close</button>
-        </div>
+        <input type="submit" value="Add Artist Performing at a Concert">
+    </form>
+
+<div id="popupMenu" class="popup">
+    <div class="popup-content">
+        <form id="update-artist-to-concert-form" action="/update-artist-to-concert-form" method="POST">
+        <label for="artistName">Artist Name Performing at a Concert:</label>
+        <input type="text" id="artistName" name="artistName" placeholder="Enter Artist's Name:" required><br>
+
+        <label for="concertLocation">Concert Location (Zip-Code):</label>
+        <input type="number" id="concertLocation" name="concertLocation" placeholder="Enter Concert Location:" required><br>
+
+        <input type="submit" value="Update Artist Performing at a Concert">
+    </form>
+        <span id="closePopup" class="close">&times;</span>
+        <button id="closeButton">Close</button>
     </div>
 </div>
+</div>
+
 
 <script>
+    // Deletes row client-side
 document.addEventListener("DOMContentLoaded", () => {
     const deleteButtons = document.querySelectorAll(".delete-btn");
     const editButtons = document.querySelectorAll(".edit-btn");
     const popupMenu = document.getElementById("popupMenu");
     const closePopup = document.getElementById("closePopup");
     const closeButton = document.getElementById("closeButton");
-    const updateForm = document.getElementById("update-artist-to-concert-form");
-    const updateArtistID = document.getElementById("updateArtistName");
-    const updateConcertID = document.getElementById("updateConcertLocation");
 
     deleteButtons.forEach(button => {
-        button.addEventListener("click", async (event) => {
+        button.addEventListener("click", async function (event) {
             event.preventDefault();
 
             const row = button.closest("tr");
-            const id = row.getAttribute("data-id");
-            row.remove();
+            const artistId = row.getAttribute("data-id");
+            row.remove(); 
 
             try {
-                await fetch(`/delete-artist-concert/${id}`, { method: "DELETE" });
+                const response = await fetch(`/delete-artist-concert/${artistId}`, {
+                    method: 'DELETE',
+                });
             } catch (error) {
-                console.error("Error deleting row:", error);
+                console.error("Error:", error);
             }
         });
     });
 
+
+    // Open Popup Menu on Edit
     editButtons.forEach(button => {
         button.addEventListener("click", (event) => {
             event.preventDefault();
-
-            const row = button.closest("tr");
-            const id = row.getAttribute("data-id");
-            const artistID = row.getAttribute("data-artistID");
-            const concertID = row.getAttribute("data-concertID");
-
-            updateArtistID.value = artistID;
-            updateConcertID.value = concertID;
-            updateForm.action = `/update-artist-to-concert-form/${id}`;
-
             popupMenu.style.display = "flex";
         });
     });
 
-    closePopup.addEventListener("click", () => (popupMenu.style.display = "none"));
-    closeButton.addEventListener("click", () => (popupMenu.style.display = "none"));
+    // Close Popup Menu
+    closePopup.addEventListener("click", () => {
+        popupMenu.style.display = "none";
+    });
 
+    closeButton.addEventListener("click", () => {
+        popupMenu.style.display = "none";
+    });
+
+    // Close Popup Menu when clicking outside the content area
     window.addEventListener("click", (event) => {
         if (event.target === popupMenu) {
             popupMenu.style.display = "none";

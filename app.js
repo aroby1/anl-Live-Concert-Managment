@@ -430,29 +430,6 @@ app.post('/update-artist-form/:id', function(req, res) {
     });
 });
 
-app.post('/update-concert-form/:id', function(req, res) {
-    let data = req.body;
-    let id = parseInt(req.params.id);
-
-    let query = `UPDATE ConcertDetails SET 
-                 artistID = ?, 
-                 tourID = ?, 
-                 ticketsAvailable = ?, 
-                 ticketsSold = ?, 
-                 startDate = ?, 
-                 location = ? 
-                 WHERE concertID = ?;`;
-
-    db.pool.query(query, [
-        data['artistID'], data['tourID'], data['ticketsAvailable'], data['ticketsSold'], data['startDate'], data['location'], id], function(error, rows, fields) {
-        if (error) {
-            console.log(error); 
-            return res.sendStatus(400);  
-        } else {
-            res.redirect('/concerts'); 
-        }
-    });
-});
 
 // // Start the server
 // app.listen(PORT, function () {
