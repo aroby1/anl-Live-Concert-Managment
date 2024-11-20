@@ -95,7 +95,7 @@ SET
     vendorName = :vendorName,
     vendorProduct = :vendorProduct
 WHERE
-    artistID = :artistID;
+    vendorID = :vendorID;
 
 -- Update Tours
 UPDATE Tours 

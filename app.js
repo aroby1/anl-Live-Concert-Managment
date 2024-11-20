@@ -430,6 +430,20 @@ app.post('/update-artist-form/:id', function(req, res) {
     });
 });
 
+app.post('/update-vendor-form/:id', function(req, res) {
+    let data = req.body;
+    let id = parseInt(req.params.id);
+
+    let query1 = `UPDATE Vendors SET vendorName = ?, vendorProduct = ? WHERE vendorID = ?`;
+    db.pool.query(query1, [data['vendorName'], data['vendorProduct'], id], function(error, rows, fields) {
+        if (error) {
+            console.error(error); 
+            return res.sendStatus(400); 
+        } else {
+            res.redirect('/vendors'); 
+        }
+    });
+});
 
 // // Start the server
 // app.listen(PORT, function () {
