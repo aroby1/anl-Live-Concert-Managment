@@ -10,7 +10,7 @@
         </thead>
         <tbody>
             {{#each data}}
-                <tr data-id="{{this.artistID}}">
+                <tr data-id="{{this.artistID}}" data-name="{{this.artistName}}">
                     <td>{{this.artistID}}</td>
                     <td>{{this.artistName}}</td>
                     <td><a href="#" class="edit-btn">Edit</a></td>
@@ -23,35 +23,37 @@
     <!-- Add Form -->
     <h3>Add Artist</h3>
     <form id="add-artist-form" action="/add-artist-form" method="POST">
-        <label for="artistName">Artist Name:</label>
-        <input type="text" id="artistName" name="artistName" placeholder="Enter artist name" required><br>
+        <label for="addArtistName">Artist Name:</label>
+        <input type="text" id="addArtistName" name="artistName" placeholder="Enter artist name" required><br>
         <input type="submit" value="Add Artist">
     </form>
 </div>
 
+<!-- Popup Menu -->
 <div id="popupMenu" class="popup">
   <div class="popup-content">
     <span id="closePopup" class="close">&times;</span>
     <h3>Update Artist</h3>
-    <form id="update-artist-form" action="/update-artist-form" method="POST">
-        <input type="hidden" id="artistID" name="artistID"> 
-        <label for="artistName">Artist Name:</label>
-        <input type="text" id="artistName" name="artistName" placeholder="Enter artist name" required><br>
+    <form id="update-artist-form" method="POST">
+        <input type="hidden" id="updateArtistID" name="artistID">
+        <label for="updateArtistName">Artist Name:</label>
+        <input type="text" id="updateArtistName" name="artistName" placeholder="Enter artist name" required><br>
         <input type="submit" value="Update Artist">
     </form>
     <button id="closeButton">Close</button>
   </div>
 </div>
 
-
 <script>
-// Artists Delete
 document.addEventListener("DOMContentLoaded", () => {
     const deleteButtons = document.querySelectorAll(".delete-btn");
     const editButtons = document.querySelectorAll(".edit-btn");
     const popupMenu = document.getElementById("popupMenu");
     const closePopup = document.getElementById("closePopup");
     const closeButton = document.getElementById("closeButton");
+    const updateArtistForm = document.getElementById("update-artist-form");
+    const updateArtistID = document.getElementById("updateArtistID");
+    const updateArtistName = document.getElementById("updateArtistName");
 
     // Delete Artist
     deleteButtons.forEach(button => {
@@ -80,6 +82,16 @@ document.addEventListener("DOMContentLoaded", () => {
     editButtons.forEach(button => {
         button.addEventListener("click", (event) => {
             event.preventDefault();
+
+            const row = button.closest("tr");
+            const artistId = row.getAttribute("data-id");
+            const artistName = row.getAttribute("data-name");
+
+            updateArtistID.value = artistId;
+            updateArtistName.value = artistName;
+
+            updateArtistForm.action = `/update-artist-form/${artistId}`;
+
             popupMenu.style.display = "flex";
         });
     });
@@ -100,4 +112,5 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
 </script>

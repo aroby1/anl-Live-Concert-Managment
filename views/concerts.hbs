@@ -1,83 +1,81 @@
 <div class="container">
     <h2>List of Concerts</h2>
-        <table>
-            <thead>
-                    <tr>
-                    {{#each data.[0]}}
-                    <th>
-                        {{@key}}
-                    </th>
-                    {{/each}}
-                    <th colspan="2">Actions</th>
+    <table>
+        <thead>
+            <tr>
+                {{#each data.[0]}}
+                    <th>{{@key}}</th>
+                {{/each}}
+                <th colspan="2">Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {{#each data}}
+                <tr data-id="{{this.concertID}}" data-ticketsAvailable="{{this.numTicketsAvailable}}" data-ticketsSold="{{this.numTicketsSold}}" data-startDate="{{this.startDate}}" data-location="{{this.location}}" data-tourName="{{this.tourName}}" data-artistName="{{this.artistName}}">
+                    <td>{{this.concertID}}</td>
+                    <td>{{this.numTicketsAvailable}}</td> <!-- Fixed typo: numTicketAvailable -> numTicketsAvailable -->
+                    <td>{{this.numTicketsSold}}</td>
+                    <td>{{this.startDate}}</td>
+                    <td>{{this.location}}</td>
+                    <td>{{this.tourName}}</td>
+                    <td>{{this.artistName}}</td>
+                    <td><a href="#" class="edit-btn">Edit</a></td>
+                    <td><a href="#" class="delete-btn">Delete</a></td>
                 </tr>
-            </thead>
+            {{/each}}
+        </tbody>
+    </table>
 
-            <tbody>
-                {{#each data}}
-                    <tr data-id="{{this.concertID}}">
-                        <td>{{ this.concertID }}</td>
-                        <td>{{ this.numTicketAvailable }}</td>
-                        <td>{{ this.numTicketSold }}</td>
-                        <td>{{ this.startDate }}</td>
-                        <td>{{ this.location }}</td>
-                        <td>{{ this.tourName }}</td>
-                        <td>{{ this.artistName }}</td>
-                        <td><a href="#" class="edit-btn">Edit</a></td>
-                        <td><a href="#" class="delete-btn">Delete</a></td>
-                    </tr>
-                {{/each}}
-            </tbody>
-        </table>
-
-        <!-- Add Form -->
-        <h3>Add Concert</h3>
-        <p>To add a new concert, please enter the concert information below and click 'Add Concert'!</p>
-        <form id="add-concert-form" action="/add-concert-form" method="POST">
+    <!-- Add Form -->
+    <h3>Add Concert</h3>
+    <p>To add a new concert, please enter the concert information below and click 'Add Concert'!</p>
+    <form id="add-concert-form" action="/add-concert-form" method="POST">
         <label for="tourName">Tour Name: </label>
-            <select name="tourName" id="tourName">
-                <option value="">Select a Tour</option>
-                {{#each tour}}
-                    <option value="{{this.tourID}}">{{this.tourName}}</option>
-                {{/each}}
-            </select><br>
-    
+        <select name="tourName" id="tourName">
+            <option value="">Select a Tour</option>
+            {{#each tour}}
+                <option value="{{this.tourID}}">{{this.tourName}}</option>
+            {{/each}}
+        </select><br>
+
         <label for="artistName">Artist Name: </label>
-            <select name="artistName" id="artistName">
-                <option value="">Select an Artist</option>
-                {{#each artist}}
-                    <option value="{{this.artistID}}">{{this.artistName}}</option>
-                {{/each}}
-            </select><br>
+        <select name="artistName" id="artistName">
+            <option value="">Select an Artist</option>
+            {{#each artist}}
+                <option value="{{this.artistID}}">{{this.artistName}}</option>
+            {{/each}}
+        </select><br>
 
-            <label for="ticketsAvailable">Tickets Available:</label>
-            <input type="number" id="ticketsAvailable" name="ticketsAvailable" placeholder="Enter number of tickets available" required><br>
+        <label for="ticketsAvailable">Tickets Available:</label>
+        <input type="number" id="ticketsAvailable" name="ticketsAvailable" placeholder="Enter number of tickets available" required><br>
 
-            <label for="ticketsSold">Tickets Sold:</label>
-            <input type="number" id="ticketsSold" name="ticketsSold" placeholder="Enter number of tickets sold" required><br>
+        <label for="ticketsSold">Tickets Sold:</label>
+        <input type="number" id="ticketsSold" name="ticketsSold" placeholder="Enter number of tickets sold" required><br>
 
-            <label for="startDate">Start Date:</label>
-            <input type="datetime-local" id="startDate" name="startDate" required><br>
+        <label for="startDate">Start Date:</label>
+        <input type="datetime-local" id="startDate" name="startDate" required><br>
 
-            <label for="location">Location:</label>
-            <input type="number" id="location" name="location" placeholder="Must be in Zip-Code format" required><br>
+        <label for="location">Location:</label>
+        <input type="number" id="location" name="location" placeholder="Must be in Zip-Code format" required><br>
 
-            <input type="submit" value="Add Concert">
-        </form>
-    </div>
+        <input type="submit" value="Add Concert">
+    </form>
+</div>
 
 <div id="popupMenu" class="popup">
-<div class="popup-content">
-    <form id="add-concert-form" action="/update-concert-form" method="POST">
-        <label for="tourName">Tour Name: </label>
-            <select name="tourName" id="tourName">
+    <div class="popup-content">
+        <form id="update-concert-form" action="/update-concert-form" method="POST"> <!-- Changed id to update-concert-form -->
+            <label for="tourName">Tour Name: </label>
+            <select name="tourID" id="tourName">
                 <option value="">Select a Tour</option>
                 {{#each tour}}
                     <option value="{{this.tourID}}">{{this.tourName}}</option>
                 {{/each}}
             </select><br>
-    
-        <label for="artistName">Artist Name: </label>
-            <select name="artistName" id="artistName">
+
+            <label for="artistName">Artist Name: </label>
+            <select name="artistID" id="artistName">
                 <option value="">Select an Artist</option>
                 {{#each artist}}
                     <option value="{{this.artistID}}">{{this.artistName}}</option>
@@ -98,11 +96,10 @@
 
             <input type="submit" value="Update Concert">
         </form>
-<span id="closePopup" class="close">&times;</span>
-<button id="closeButton">Close</button>
+        <span id="closePopup" class="close">&times;</span>
+        <button id="closeButton">Close</button>
+    </div>
 </div>
-</div>
-
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
@@ -115,10 +112,9 @@ document.addEventListener("DOMContentLoaded", () => {
     deleteButtons.forEach(button => {
         button.addEventListener("click", async function (event) {
             event.preventDefault();
-
             const row = button.closest("tr");
-            const id = row.getAttribute("concert-id");
-            row.remove(); 
+            const id = row.getAttribute("data-id"); // Fixed: `concert-id` -> `data-id`
+            row.remove();
 
             try {
                 const response = await fetch(`/delete-concert/${id}`, {
@@ -129,7 +125,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
-        // Open Popup Menu on Edit
+
+    // Open Popup Menu on Edit
     editButtons.forEach(button => {
         button.addEventListener("click", (event) => {
             event.preventDefault();

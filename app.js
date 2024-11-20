@@ -415,28 +415,50 @@ app.delete('/delete-artist-concert/:id', (req, res) => {
 });
 
 //Updates
-// app.post('/update-artist-form', function(req, res) {
-//     const { artistName, artistID } = req.body;
-//     const query = `UPDATE Artists SET artistName = ? WHERE artistID = ?;`;
-    
-//     db.pool.query(query, [artistName, artistID], function(error, results) {
-//         if (error) {
-//             console.error("Error updating artist:", error);
-//             res.status(500).send("Server Error");
-//         } else {
-//             res.redirect('/artists'); 
-//         }
-//     });
-// });
+app.post('/update-artist-form/:id', function(req, res) {
+    let data = req.body;
+    let id = parseInt(req.params.id); 
 
-
-
-
-// Start the server
-app.listen(PORT, function () {
-    console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.');
+    let query1 = `UPDATE Artists SET artistName = ? WHERE artistID = ?`;
+    db.pool.query(query1, [data['artistName'], id], function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            return res.sendStatus(400); 
+        } else {
+            res.redirect('/artists'); 
+        }
+    });
 });
 
-// app.listen(PORT, 'localhost', function () {
-//     console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.');
+app.post('/update-concert-form/:id', function(req, res) {
+    let data = req.body;
+    let id = parseInt(req.params.id);
+
+    let query = `UPDATE ConcertDetails SET 
+                 artistID = ?, 
+                 tourID = ?, 
+                 ticketsAvailable = ?, 
+                 ticketsSold = ?, 
+                 startDate = ?, 
+                 location = ? 
+                 WHERE concertID = ?;`;
+
+    db.pool.query(query, [
+        data['artistID'], data['tourID'], data['ticketsAvailable'], data['ticketsSold'], data['startDate'], data['location'], id], function(error, rows, fields) {
+        if (error) {
+            console.log(error); 
+            return res.sendStatus(400);  
+        } else {
+            res.redirect('/concerts'); 
+        }
+    });
+});
+
+// // Start the server
+// app.listen(PORT, function () {
+//     console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.');
 // });
+
+app.listen(PORT, 'localhost', function () {
+    console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.');
+});
