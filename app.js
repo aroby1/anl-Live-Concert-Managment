@@ -413,6 +413,7 @@ app.delete('/delete-artist-concert/:id', (req, res) => {
     });
 });
 
+<<<<<<< HEAD
 // Updates
 // app.post('/update-artist-form', function(req, res) {
 //     const { artistName, artistID } = req.body;
@@ -427,15 +428,44 @@ app.delete('/delete-artist-concert/:id', (req, res) => {
 //         }
 //     });
 // });
+=======
+//Updates
+app.post('/update-artist-form/:id', function(req, res) {
+    let data = req.body;
+    let id = parseInt(req.params.id); 
+>>>>>>> 3331ab713b41d76d2bd790b581be004b9efa0367
 
-
-
-
-// Start the server
-app.listen(PORT, function () {
-    console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.');
+    let query1 = `UPDATE Artists SET artistName = ? WHERE artistID = ?`;
+    db.pool.query(query1, [data['artistName'], id], function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            return res.sendStatus(400); 
+        } else {
+            res.redirect('/artists'); 
+        }
+    });
 });
 
-// app.listen(PORT, 'localhost', function () {
-//     console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.');
+app.post('/update-vendor-form/:id', function(req, res) {
+    let data = req.body;
+    let id = parseInt(req.params.id);
+
+    let query1 = `UPDATE Vendors SET vendorName = ?, vendorProduct = ? WHERE vendorID = ?`;
+    db.pool.query(query1, [data['vendorName'], data['vendorProduct'], id], function(error, rows, fields) {
+        if (error) {
+            console.error(error); 
+            return res.sendStatus(400); 
+        } else {
+            res.redirect('/vendors'); 
+        }
+    });
+});
+
+// // Start the server
+// app.listen(PORT, function () {
+//     console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.');
 // });
+
+app.listen(PORT, 'localhost', function () {
+    console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.');
+});
