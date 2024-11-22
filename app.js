@@ -1,8 +1,7 @@
 var express = require('express');
 var app = express();
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
-const router = express.Router();
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 PORT = 8544;
 
@@ -414,7 +413,7 @@ app.delete('/delete-artist-concert/:id', (req, res) => {
     });
 });
 
-//Updates
+// Updates
 // app.post('/update-artist-form', function(req, res) {
 //     const { artistName, artistID } = req.body;
 //     const query = `UPDATE Artists SET artistName = ? WHERE artistID = ?;`;
