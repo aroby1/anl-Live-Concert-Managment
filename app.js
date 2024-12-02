@@ -81,8 +81,7 @@ app.get('/concerts', function (req, res) {
         FROM Concerts c
         JOIN Tours t ON c.tourID = t.tourID
         JOIN Artists a ON t.artistID = a.artistID
-        ORDER BY c.concertID ASC
-    `;
+        ORDER BY c.concertID ASC`;
 
     let query2 = `SELECT * FROM Tours`;
     let query3 = `SELECT * FROM Artists`;
@@ -90,7 +89,7 @@ app.get('/concerts', function (req, res) {
     db.pool.query(query1, function(error, rows, fields) {
         if (error) {
             console.error("Error fetching concerts:", error);
-            return res.status(400).send("Database error");
+            return res.status(400).send("Database error 1");
         }
 
         let concerts = rows;
@@ -98,7 +97,7 @@ app.get('/concerts', function (req, res) {
         db.pool.query(query2, function(error, rows, fields) {
             if (error) {
                 console.error("Error fetching concerts:", error);
-                return res.status(400).send("Database error");
+                return res.status(400).send("Database error 2");
             }
 
             let tours = rows;
@@ -445,6 +444,69 @@ app.post('/update-vendor-form/:id', function(req, res) {
     });
 });
 
+app.post('/update-tour-form/:id', function(req, res) {
+    let data = req.body;
+    let id = parseInt(req.params.id);
+
+    let query = `UPDATE Tours SET tourName = ?, tourStartDate = ?, tourEndDate = ?, concertTotal = ?, artistID = ? WHERE tourID = ?`;
+
+    db.pool.query(query, [data['tourName'], data['startDate'], data['endDate'], data['concertTotal'], data['artistName'], id], function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            return res.sendStatus(400); 
+        } else {
+            res.redirect('/tours'); 
+        }
+    });
+});
+
+app.post('/update-concert/:id', function(req, res) {
+    let data = req.body;
+    let id = parseInt(req.params.id);
+
+    let query = `UPDATE Concerts SET numTicketAvailable = ?, numTicketSold = ?, startDate = ?, location = ? WHERE concertID = ?`;
+
+    db.pool.query(query, [data['ticketAvailable'], data['ticketSold'], data['startDate'], data['location'], id], function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            return res.sendStatus(400); 
+        } else {
+            res.redirect('/concerts'); 
+        }
+    });
+});
+
+app.post('/update-artist-to-concert/:id', function(req, res) {
+    let data = req.body;
+    let id = parseInt(req.params.id);
+
+    let query = `UPDATE ArtistConcertDetails SET artistID = ?, concertID = ? WHERE artistConcertID = ?`;
+
+    db.pool.query(query, [data.artistID, data.concertID, id], function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            return res.status(400).send({ message: 'Update failed' });
+        } else {
+            return res.redirect('/artistConcert');
+        }
+    });
+});
+
+app.post('/update-vendor-at-concert/:id', function(req, res) {
+    let data = req.body;
+    let id = parseInt(req.params.id);
+
+    let query = `UPDATE ConcertVendorDetails SET concertID = ?, vendorID = ? WHERE concertVendorID = ?`;
+
+    db.pool.query(query, [data.concertID, data.vendorID, id], function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            return res.status(400).send({ message: 'Update failed' });
+        } else {
+            return res.redirect('/artistVendor');
+        }
+    });
+});
 // // Start the server
 // app.listen(PORT, function () {
 //     console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.');
@@ -453,3 +515,5 @@ app.post('/update-vendor-form/:id', function(req, res) {
 app.listen(PORT, 'localhost', function () {
     console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.');
 });
+
+//update artistConcerts, concertsVendors 

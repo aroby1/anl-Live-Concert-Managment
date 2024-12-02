@@ -1,108 +1,113 @@
+<!-- HTML and Handlebars Template -->
 <div class="container">
     <h2>List of Concerts</h2>
-        <table>
-            <thead>
-                    <tr>
-                    {{#each data.[0]}}
-                    <th>
-                        {{@key}}
-                    </th>
-                    {{/each}}
-                    <th colspan="2">Actions</th>
+    <table>
+        <thead>
+            <tr>
+                {{#each data.[0]}}
+                    <th>{{@key}}</th>
+                {{/each}}
+                <th colspan="2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each data}}
+                <tr data-id="{{this.concertID}}" 
+                    data-tour-id="{{this.tourID}}"
+                    data-artist-id="{{this.artistID}}"
+                    data-tickets-available="{{this.numTicketAvailable}}"
+                    data-tickets-sold="{{this.numTicketSold}}"
+                    data-start-date="{{this.startDate}}"
+                    data-location="{{this.location}}">
+                    <td>{{ this.concertID }}</td>
+                    <td>{{ this.numTicketAvailable }}</td>
+                    <td>{{ this.numTicketSold }}</td>
+                    <td>{{ this.startDate }}</td>
+                    <td>{{ this.location }}</td>
+                    <td>{{ this.tourName }}</td>
+                    <td>{{ this.artistName }}</td>
+                    <td><a href="#" class="edit-btn">Edit</a></td>
+                    <td><a href="#" class="delete-btn">Delete</a></td>
                 </tr>
-            </thead>
+            {{/each}}
+        </tbody>
+    </table>
 
-            <tbody>
-                {{#each data}}
-                    <tr data-id="{{this.concertID}}">
-                        <td>{{ this.concertID }}</td>
-                        <td>{{ this.numTicketAvailable }}</td>
-                        <td>{{ this.numTicketSold }}</td>
-                        <td>{{ this.startDate }}</td>
-                        <td>{{ this.location }}</td>
-                        <td>{{ this.tourName }}</td>
-                        <td>{{ this.artistName }}</td>
-                        <td><a href="#" class="edit-btn">Edit</a></td>
-                        <td><a href="#" class="delete-btn">Delete</a></td>
-                    </tr>
-                {{/each}}
-            </tbody>
-        </table>
-
-        <!-- Add Form -->
-        <h3>Add Concert</h3>
-        <p>To add a new concert, please enter the concert information below and click 'Add Concert'!</p>
-        <form id="add-concert-form" action="/add-concert-form" method="POST">
+    <!-- Add Form -->
+    <h3>Add Concert</h3>
+    <p>To add a new concert, please enter the concert information below and click 'Add Concert'!</p>
+    <form id="add-concert-form" action="/add-concert-form" method="POST">
         <label for="tourName">Tour Name: </label>
-            <select name="tourName" id="tourName">
-                <option value="">Select a Tour</option>
-                {{#each tour}}
-                    <option value="{{this.tourID}}">{{this.tourName}}</option>
-                {{/each}}
-            </select><br>
-    
+        <select name="tourID" id="tourName">
+            <option value="">Select a Tour</option>
+            {{#each tour}}
+                <option value="{{this.tourID}}">{{this.tourName}}</option>
+            {{/each}}
+        </select><br>
+
         <label for="artistName">Artist Name: </label>
-            <select name="artistName" id="artistName">
-                <option value="">Select an Artist</option>
-                {{#each artist}}
-                    <option value="{{this.artistID}}">{{this.artistName}}</option>
-                {{/each}}
-            </select><br>
+        <select name="artistID" id="artistName">
+            <option value="">Select an Artist</option>
+            {{#each artist}}
+                <option value="{{this.artistID}}">{{this.artistName}}</option>
+            {{/each}}
+        </select><br>
 
-            <label for="ticketsAvailable">Tickets Available:</label>
-            <input type="number" id="ticketsAvailable" name="ticketsAvailable" placeholder="Enter number of tickets available" required><br>
+        <label for="ticketsAvailable">Tickets Available:</label>
+        <input type="number" id="ticketsAvailable" name="numTicketAvailable" placeholder="Enter number of tickets available" required><br>
 
-            <label for="ticketsSold">Tickets Sold:</label>
-            <input type="number" id="ticketsSold" name="ticketsSold" placeholder="Enter number of tickets sold" required><br>
+        <label for="ticketsSold">Tickets Sold:</label>
+        <input type="number" id="ticketsSold" name="numTicketSold" placeholder="Enter number of tickets sold" required><br>
 
-            <label for="startDate">Start Date:</label>
-            <input type="datetime-local" id="startDate" name="startDate" required><br>
+        <label for="startDate">Start Date:</label>
+        <input type="datetime-local" id="startDate" name="startDate" required><br>
 
-            <label for="location">Location:</label>
-            <input type="number" id="location" name="location" placeholder="Must be in Zip-Code format" required><br>
+        <label for="location">Location:</label>
+        <input type="number" id="location" name="location" placeholder="Must be in Zip-Code format" required><br>
 
-            <input type="submit" value="Add Concert">
-        </form>
-    </div>
+        <input type="submit" value="Add Concert">
+    </form>
+</div>
 
+<!-- Popup Form -->
 <div id="popupMenu" class="popup">
-<div class="popup-content">
-    <form id="add-concert-form" action="/update-concert-form" method="POST">
-        <label for="tourName">Tour Name: </label>
-            <select name="tourName" id="tourName">
+    <div class="popup-content">
+        <form id="update-concert-form" action="/update-concert" method="POST">
+            <input type="hidden" name="concertID" id="popupConcertID">
+            <label for="popupTourName">Tour Name: </label>
+            <select name="tourID" id="popupTourName">
                 <option value="">Select a Tour</option>
                 {{#each tour}}
                     <option value="{{this.tourID}}">{{this.tourName}}</option>
                 {{/each}}
             </select><br>
-    
-        <label for="artistName">Artist Name: </label>
-            <select name="artistName" id="artistName">
+
+            <label for="popupArtistName">Artist Name: </label>
+            <select name="artistID" id="popupArtistName">
                 <option value="">Select an Artist</option>
                 {{#each artist}}
                     <option value="{{this.artistID}}">{{this.artistName}}</option>
                 {{/each}}
             </select><br>
 
-            <label for="ticketsAvailable">Tickets Available:</label>
-            <input type="number" id="ticketsAvailable" name="ticketsAvailable" placeholder="Enter number of tickets available" required><br>
+            <label for="popupTicketsAvailable">Tickets Available:</label>
+            <input type="number" id="popupTicketsAvailable" name="numTicketAvailable" placeholder="Enter number of tickets available" required><br>
 
-            <label for="ticketsSold">Tickets Sold:</label>
-            <input type="number" id="ticketsSold" name="ticketsSold" placeholder="Enter number of tickets sold" required><br>
+            <label for="popupTicketsSold">Tickets Sold:</label>
+            <input type="number" id="popupTicketsSold" name="numTicketSold" placeholder="Enter number of tickets sold" required><br>
 
-            <label for="startDate">Start Date:</label>
-            <input type="datetime-local" id="startDate" name="startDate" required><br>
+            <label for="popupStartDate">Start Date:</label>
+            <input type="datetime-local" id="popupStartDate" name="startDate" required><br>
 
-            <label for="location">Location:</label>
-            <input type="number" id="location" name="location" placeholder="Must be in Zip-Code format" required><br>
+            <label for="popupLocation">Location:</label>
+            <input type="number" id="popupLocation" name="location" placeholder="Must be in Zip-Code format" required><br>
 
             <input type="submit" value="Update Concert">
         </form>
-<span id="closePopup" class="close">&times;</span>
-<button id="closeButton">Close</button>
+        <span id="closePopup" class="close">&times;</span>
+        <button id="closeButton">Close</button>
+    </div>
 </div>
-</div>
-
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
@@ -111,28 +116,54 @@ document.addEventListener("DOMContentLoaded", () => {
     const popupMenu = document.getElementById("popupMenu");
     const closePopup = document.getElementById("closePopup");
     const closeButton = document.getElementById("closeButton");
+    const updateForm = document.getElementById("update-concert-form");
 
+    // Handle Delete Button Click
     deleteButtons.forEach(button => {
         button.addEventListener("click", async function (event) {
             event.preventDefault();
 
             const row = button.closest("tr");
-            const id = row.getAttribute("concert-id");
+            const id = row.dataset.id; // Using data-id to get concertID
             row.remove(); 
 
             try {
                 const response = await fetch(`/delete-concert/${id}`, {
                     method: 'DELETE',
                 });
+                if (!response.ok) {
+                    throw new Error('Delete request failed');
+                }
             } catch (error) {
                 console.error("Error:", error);
             }
         });
     });
-        // Open Popup Menu on Edit
+
+    // Open Popup Menu on Edit
     editButtons.forEach(button => {
         button.addEventListener("click", (event) => {
             event.preventDefault();
+
+            const row = button.closest("tr");
+            const concertID = row.dataset.id;
+            const tourID = row.dataset.tourId;
+            const artistID = row.dataset.artistId;
+            const ticketsAvailable = row.dataset.ticketsAvailable;
+            const ticketsSold = row.dataset.ticketsSold;
+            const startDate = row.dataset.startDate;
+            const location = row.dataset.location;
+
+            // Set form values based on data attributes from the row
+            updateForm.setAttribute("action", `/update-concert/${concertID}`);
+            updateForm.querySelector("#popupConcertID").value = concertID;
+            updateForm.querySelector("#popupTourName").value = tourID;
+            updateForm.querySelector("#popupArtistName").value = artistID;
+            updateForm.querySelector("#popupTicketsAvailable").value = ticketsAvailable;
+            updateForm.querySelector("#popupTicketsSold").value = ticketsSold;
+            updateForm.querySelector("#popupStartDate").value = startDate;
+            updateForm.querySelector("#popupLocation").value = location;
+
             popupMenu.style.display = "flex";
         });
     });
@@ -150,6 +181,46 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("click", (event) => {
         if (event.target === popupMenu) {
             popupMenu.style.display = "none";
+        }
+    });
+
+    // Handle Update Form Submission
+    updateForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(updateForm);
+        const concertID = updateForm.getAttribute("action").split("/").pop();
+
+        try {
+            const response = await fetch(`/update-concert/${concertID}`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                // Update the table row with the new data
+                const row = document.querySelector(`tr[data-id="${concertID}"]`);
+                row.setAttribute("data-tour-id", updateForm.querySelector("#popupTourName").value);
+                row.setAttribute("data-artist-id", updateForm.querySelector("#popupArtistName").value);
+                row.setAttribute("data-tickets-available", updateForm.querySelector("#popupTicketsAvailable").value);
+                row.setAttribute("data-tickets-sold", updateForm.querySelector("#popupTicketsSold").value);
+                row.setAttribute("data-start-date", updateForm.querySelector("#popupStartDate").value);
+                row.setAttribute("data-location", updateForm.querySelector("#popupLocation").value);
+
+                row.children[1].textContent = updateForm.querySelector("#popupTicketsAvailable").value;
+                row.children[2].textContent = updateForm.querySelector("#popupTicketsSold").value;
+                row.children[3].textContent = updateForm.querySelector("#popupStartDate").value;
+                row.children[4].textContent = updateForm.querySelector("#popupLocation").value;
+                row.children[5].textContent = updateForm.querySelector("#popupTourName").selectedOptions[0].text;
+                row.children[6].textContent = updateForm.querySelector("#popupArtistName").selectedOptions[0].text;
+                
+                // Close the popup
+                popupMenu.style.display = "none";
+            } else {
+                console.error("Update failed");
+            }
+        } catch (error) {
+            console.error("Error:", error);
         }
     });
 });
