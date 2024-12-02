@@ -413,27 +413,10 @@ app.delete('/delete-artist-concert/:id', (req, res) => {
     });
 });
 
-<<<<<<< HEAD
-// Updates
-// app.post('/update-artist-form', function(req, res) {
-//     const { artistName, artistID } = req.body;
-//     const query = `UPDATE Artists SET artistName = ? WHERE artistID = ?;`;
-    
-//     db.pool.query(query, [artistName, artistID], function(error, results) {
-//         if (error) {
-//             console.error("Error updating artist:", error);
-//             res.status(500).send("Server Error");
-//         } else {
-//             res.redirect('/artists'); 
-//         }
-//     });
-// });
-=======
 //Updates
 app.post('/update-artist-form/:id', function(req, res) {
     let data = req.body;
     let id = parseInt(req.params.id); 
->>>>>>> 3331ab713b41d76d2bd790b581be004b9efa0367
 
     let query1 = `UPDATE Artists SET artistName = ? WHERE artistID = ?`;
     db.pool.query(query1, [data['artistName'], id], function(error, rows, fields) {
@@ -461,11 +444,11 @@ app.post('/update-vendor-form/:id', function(req, res) {
     });
 });
 
-// // Start the server
-// app.listen(PORT, function () {
-//     console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.');
-// });
-
-app.listen(PORT, 'localhost', function () {
-    console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.');
+// Start the server
+app.listen(PORT, function () {
+    console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.');
 });
+
+// app.listen(PORT, 'localhost', function () {
+//     console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.');
+// });
