@@ -239,7 +239,7 @@ app.post('/add-tour-form', function (req, res) {
 
     let query1 = `
         INSERT INTO Tours (tourName, artistID, tourStartDate, tourEndDate, concertTotal)
-        VALUES ('${data.tourName}', ${data.artistName}, '${data.startDate}', '${data.endDate}', ${concertTotal})
+        VALUES ('${data.tourName}', ${data.artistID}, '${data.startDate}', '${data.endDate}', ${concertTotal})
     `;
 
     db.pool.query(query1, function (error, rows, fields) {
@@ -266,7 +266,7 @@ app.post('/add-concert-form', function(req, res) {
     let query1 = `
         INSERT INTO Concerts (numTicketAvailable, numTicketSold, startDate, location, tourID) 
         VALUES 
-        ('${data.ticketsAvailable}', '${data.ticketsSold}', '${data.startDate}', ${location}, ${data.tourName})
+        ('${data.ticketAvailable}', '${data.ticketSold}', '${data.startDate}', ${location}, ${data.tourID})
     `;
 
     db.pool.query(query1, function(error, rows, fields) {
