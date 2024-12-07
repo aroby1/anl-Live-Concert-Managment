@@ -4,9 +4,7 @@
         <thead>
             <tr>
                 {{#each data.[0]}}
-                <th>
-                    {{@key}}
-                </th>
+                <th>{{@key}}</th>
                 {{/each}}
                 <th colspan="2">Actions</th>
             </tr>
@@ -14,7 +12,7 @@
     
         <tbody>
             {{#each data}}
-                <tr data-id="{{this.artistConcertID}}">
+                <tr data-id="{{this.artistConcertID}}" data-artist-id="{{this.artistID}}" data-concert-id="{{this.concertID}}">
                     <td>{{ this.artistConcertID }}</td>
                     <td>{{ this.artistID }}</td>
                     <td>{{ this.concertID }}</td>
@@ -30,76 +28,103 @@
     <p>To add a new artist performing at a concert, please select the artist and concert, then click 'Add Artist Performing at a Concert'!</p>
     <form id="add-artist-to-concert-form" action="/add-artist-to-concert-form" method="POST">
         <label for="artistName">Artist ID: </label>
-        <select name="artistName" id="artistName">
+        <select name="artistID" id="artistName">
             <option value="">Select an Artist:</option>
             {{#each artist}}
                 <option value="{{this.artistID}}">{{this.artistName}}</option>
             {{/each}}
         </select><br>
 
-
         <label for="concertLocation">Concert ID: </label>
-        <select name="concertLocation" id="concertLocation">
+        <select name="concertID" id="concertLocation">
             <option value="">Select a Concert:</option>
             {{#each concert}}
                 <option value="{{this.concertID}}">{{this.location}}</option>
             {{/each}}
         </select><br>
 
-
         <input type="submit" value="Add Artist Performing at a Concert">
     </form>
 
-<div id="popupMenu" class="popup">
-    <div class="popup-content">
-        <form id="update-artist-to-concert-form" action="/update-artist-to-concert-form" method="POST">
-        <label for="artistName">Artist Name Performing at a Concert:</label>
-        <input type="text" id="artistName" name="artistName" placeholder="Enter Artist's Name:" required><br>
+    <!-- Popup Form for Updating Artist at Concert -->
+    <div id="popupMenu" class="popup">
+        <div class="popup-content">
+            <form id="update-artist-to-concert-form" action="/update-artist-to-concert" method="POST">
+                <input type="hidden" name="artistConcertID" id="popupArtistConcertID">
+                <label for="popupArtistName">Artist ID:</label>
+                <select name="artistID" id="popupArtistName">
+                    <option value="">Select an Artist:</option>
+                    {{#each artist}}
+                        <option value="{{this.artistID}}">{{this.artistName}}</option>
+                    {{/each}}
+                </select><br>
 
-        <label for="concertLocation">Concert Location (Zip-Code):</label>
-        <input type="number" id="concertLocation" name="concertLocation" placeholder="Enter Concert Location:" required><br>
+                <label for="popupConcertLocation">Concert ID:</label>
+                <select name="concertID" id="popupConcertLocation">
+                    <option value="">Select a Concert:</option>
+                    {{#each concert}}
+                        <option value="{{this.concertID}}">{{this.location}}</option>
+                    {{/each}}
+                </select><br>
 
-        <input type="submit" value="Update Artist Performing at a Concert">
-    </form>
-        <span id="closePopup" class="close">&times;</span>
-        <button id="closeButton">Close</button>
+                <input type="submit" value="Update Artist Performing at a Concert">
+            </form>
+            <span id="closePopup" class="close">&times;</span>
+            <button id="closeButton">Close</button>
+        </div>
     </div>
 </div>
-</div>
-
 
 <script>
-    // Deletes row client-side
 document.addEventListener("DOMContentLoaded", () => {
     const deleteButtons = document.querySelectorAll(".delete-btn");
     const editButtons = document.querySelectorAll(".edit-btn");
     const popupMenu = document.getElementById("popupMenu");
     const closePopup = document.getElementById("closePopup");
     const closeButton = document.getElementById("closeButton");
+    const updateForm = document.getElementById("update-artist-to-concert-form");
+    const popupArtistName = document.getElementById("popupArtistName");
+    const popupConcertLocation = document.getElementById("popupConcertLocation");
+    const popupArtistConcertID = document.getElementById("popupArtistConcertID");
 
+    // Handle Delete Button Click
     deleteButtons.forEach(button => {
         button.addEventListener("click", async function (event) {
             event.preventDefault();
 
             const row = button.closest("tr");
-            const artistId = row.getAttribute("data-id");
-            row.remove(); 
+            const artistConcertID = row.getAttribute("data-id");
+            row.remove();
 
             try {
-                const response = await fetch(`/delete-artist-concert/${artistId}`, {
+                const response = await fetch(`/delete-artist-concert/${artistConcertID}`, {
                     method: 'DELETE',
                 });
+                if (!response.ok) {
+                    throw new Error('Delete request failed');
+                }
             } catch (error) {
                 console.error("Error:", error);
             }
         });
     });
 
-
     // Open Popup Menu on Edit
     editButtons.forEach(button => {
         button.addEventListener("click", (event) => {
             event.preventDefault();
+
+            const row = button.closest("tr");
+            const artistConcertID = row.getAttribute("data-id");
+            const artistID = row.getAttribute("data-artist-id");
+            const concertID = row.getAttribute("data-concert-id");
+
+            // Set form values based on data attributes from the row
+            updateForm.setAttribute("action", `/update-artist-to-concert/${artistConcertID}`);
+            popupArtistConcertID.value = artistConcertID;
+            popupArtistName.value = artistID;
+            popupConcertLocation.value = concertID;
+
             popupMenu.style.display = "flex";
         });
     });
@@ -117,6 +142,44 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("click", (event) => {
         if (event.target === popupMenu) {
             popupMenu.style.display = "none";
+        }
+    });
+
+    // Handle Update Form Submission
+    updateForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(updateForm);
+        const artistConcertID = updateForm.getAttribute("action").split("/").pop();
+
+        const payload = {
+        concertID: formData.get("concertID"),
+        artistID: formData.get("artistID"),
+        };
+
+        try {
+            const response = await fetch(`/update-artist-to-concert/${artistConcertID}`, {
+                method: 'POST',
+                headers: {
+                "Content-Type": "application/json",
+            },
+                body: JSON.stringify(payload),
+            });
+
+            if (response.ok) {
+                // Update the table row with the new data
+                const row = document.querySelector(`tr[data-id="${artistConcertID}"]`);
+                row.setAttribute("data-artist-id", popupArtistName.value);
+                row.setAttribute("data-concert-id", popupConcertLocation.value);
+                row.children[1].textContent = popupArtistName.value;
+                row.children[2].textContent = popupConcertLocation.value;
+
+                popupMenu.style.display = "none";
+            } else {
+                console.error("Update failed:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error:", error);
         }
     });
 });

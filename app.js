@@ -172,18 +172,23 @@ app.get('/concertVendor', function (req, res) {
             return res.status(400).send("Database error");
         }
 
-        db.pool.query(query2, function (error, vendors, fields) {
+        let data = rows;
+
+        db.pool.query(query2, function (error, rows, fields) {
             if (error) {
                 console.error("Error fetching vendors:", error);
                 return res.status(400).send("Database error");
             }
+            let vendors = rows;
 
-            db.pool.query(query3, function (error, concerts, fields) {
+
+            db.pool.query(query3, function (error, rows, fields) {
                 if (error) {
                     console.error("Error fetching concerts:", error);
                     return res.status(400).send("Database error");
                 }
-                res.render('concertVendor', { data: rows, vendors: vendors, concerts: concerts });
+                let concerts = rows;
+                res.render('concertVendor', { data: data, vendors: vendors, concerts: concerts });
             });
         });
     });
@@ -477,12 +482,12 @@ app.post('/update-concert/:id', function(req, res) {
 });
 
 app.post('/update-artist-to-concert/:id', function(req, res) {
-    let data = req.body;
+    let { concertID, artistID } = req.body; 
     let id = parseInt(req.params.id);
 
     let query = `UPDATE ArtistConcertDetails SET artistID = ?, concertID = ? WHERE artistConcertID = ?`;
 
-    db.pool.query(query, [data.artistID, data.concertID, id], function(error, rows, fields) {
+    db.pool.query(query, [artistID, concertID, id], function(error, rows, fields) {
         if (error) {
             console.log(error);
             return res.status(400).send({ message: 'Update failed' });
@@ -491,22 +496,24 @@ app.post('/update-artist-to-concert/:id', function(req, res) {
         }
     });
 });
-
-app.post('/update-vendor-at-concert/:id', function(req, res) {
-    let data = req.body;
+app.post('/update-vendor-at-concert/:id', (req, res) => {
+    let { concertID, vendorID } = req.body; // Destructure from JSON body
     let id = parseInt(req.params.id);
 
     let query = `UPDATE ConcertVendorDetails SET concertID = ?, vendorID = ? WHERE concertVendorID = ?`;
 
-    db.pool.query(query, [data.concertID, data.vendorID, id], function(error, rows, fields) {
+    db.pool.query(query, [concertID, vendorID, id], (error, rows, fields) => {
         if (error) {
-            console.log(error);
+            console.error(error); // Log the error for debugging
             return res.status(400).send({ message: 'Update failed' });
         } else {
-            return res.redirect('/artistVendor');
+            res.redirect('/concertVendor'); // Redirect on success
         }
     });
 });
+
+
+
 // // Start the server
 // app.listen(PORT, function () {
 //     console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.');
