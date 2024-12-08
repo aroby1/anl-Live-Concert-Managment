@@ -1,21 +1,25 @@
 <div class="container">
+    <!-- Section: Display List of Artists Performing at a Concert -->
     <h2>List of Artists performing at a Concert</h2>
     <table>
         <thead>
             <tr>
+                <!-- Dynamically generate table headers based on the first row of data -->
                 {{#each data.[0]}}
                 <th>{{@key}}</th>
                 {{/each}}
+                <!-- Extra headers for action buttons -->
                 <th colspan="2">Actions</th>
             </tr>
         </thead>
-    
         <tbody>
+            <!-- Iterate over each data row to create table rows -->
             {{#each data}}
                 <tr data-id="{{this.artistConcertID}}" data-artist-id="{{this.artistID}}" data-concert-id="{{this.concertID}}">
                     <td>{{ this.artistConcertID }}</td>
                     <td>{{ this.artistID }}</td>
                     <td>{{ this.concertID }}</td>
+                    <!-- Action buttons for editing and deleting rows -->
                     <td><a href="#" class="edit-btn">Edit</a></td>
                     <td><a href="#" class="delete-btn">Delete</a></td>
                 </tr>
@@ -23,10 +27,11 @@
         </tbody>
     </table>
 
-    <!-- Add Form -->
+    <!-- Section: Form to Add an Artist to a Concert -->
     <h3>Add an Artist Performing at a Concert</h3>
     <p>To add a new artist performing at a concert, please select the artist and concert, then click 'Add Artist Performing at a Concert'!</p>
     <form id="add-artist-to-concert-form" action="/add-artist-to-concert-form" method="POST">
+        <!-- Dropdown to select artist -->
         <label for="artistName">Artist ID: </label>
         <select name="artistID" id="artistName">
             <option value="">Select an Artist:</option>
@@ -35,6 +40,7 @@
             {{/each}}
         </select><br>
 
+        <!-- Dropdown to select concert -->
         <label for="concertLocation">Concert ID: </label>
         <select name="concertID" id="concertLocation">
             <option value="">Select a Concert:</option>
@@ -43,6 +49,7 @@
             {{/each}}
         </select><br>
 
+        <!-- Submit button -->
         <input type="submit" value="Add Artist Performing at a Concert">
     </form>
 
@@ -50,7 +57,10 @@
     <div id="popupMenu" class="popup">
         <div class="popup-content">
             <form id="update-artist-to-concert-form" action="/update-artist-to-concert" method="POST">
+                <!-- Hidden input to store the ID of the row being updated -->
                 <input type="hidden" name="artistConcertID" id="popupArtistConcertID">
+
+                <!-- Dropdown to update artist -->
                 <label for="popupArtistName">Artist ID:</label>
                 <select name="artistID" id="popupArtistName">
                     <option value="">Select an Artist:</option>
@@ -59,6 +69,7 @@
                     {{/each}}
                 </select><br>
 
+                <!-- Dropdown to update concert -->
                 <label for="popupConcertLocation">Concert ID:</label>
                 <select name="concertID" id="popupConcertLocation">
                     <option value="">Select a Concert:</option>
@@ -67,8 +78,10 @@
                     {{/each}}
                 </select><br>
 
+                <!-- Submit button for the update form -->
                 <input type="submit" value="Update Artist Performing at a Concert">
             </form>
+            <!-- Close button for the popup -->
             <span id="closePopup" class="close">&times;</span>
             <button id="closeButton">Close</button>
         </div>
@@ -77,6 +90,7 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+    // Select elements needed for interaction
     const deleteButtons = document.querySelectorAll(".delete-btn");
     const editButtons = document.querySelectorAll(".edit-btn");
     const popupMenu = document.getElementById("popupMenu");
@@ -92,6 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
         button.addEventListener("click", async function (event) {
             event.preventDefault();
 
+            // Get the row being deleted and its unique ID
             const row = button.closest("tr");
             const artistConcertID = row.getAttribute("data-id");
             row.remove();
@@ -109,17 +124,18 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Open Popup Menu on Edit
+    // Handle Edit Button Click
     editButtons.forEach(button => {
         button.addEventListener("click", (event) => {
             event.preventDefault();
 
+            // Get the row being edited and its attributes
             const row = button.closest("tr");
             const artistConcertID = row.getAttribute("data-id");
             const artistID = row.getAttribute("data-artist-id");
             const concertID = row.getAttribute("data-concert-id");
 
-            // Set form values based on data attributes from the row
+            // Populate popup form fields with current data
             updateForm.setAttribute("action", `/update-artist-to-concert/${artistConcertID}`);
             popupArtistConcertID.value = artistConcertID;
             popupArtistName.value = artistID;
@@ -129,16 +145,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Close Popup Menu
+    // Handle Closing the Popup
     closePopup.addEventListener("click", () => {
         popupMenu.style.display = "none";
     });
-
     closeButton.addEventListener("click", () => {
         popupMenu.style.display = "none";
     });
 
-    // Close Popup Menu when clicking outside the content area
+    // Close Popup when Clicking Outside
     window.addEventListener("click", (event) => {
         if (event.target === popupMenu) {
             popupMenu.style.display = "none";
@@ -153,21 +168,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const artistConcertID = updateForm.getAttribute("action").split("/").pop();
 
         const payload = {
-        concertID: formData.get("concertID"),
-        artistID: formData.get("artistID"),
+            concertID: formData.get("concertID"),
+            artistID: formData.get("artistID"),
         };
 
         try {
             const response = await fetch(`/update-artist-to-concert/${artistConcertID}`, {
                 method: 'POST',
                 headers: {
-                "Content-Type": "application/json",
-            },
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify(payload),
             });
 
             if (response.ok) {
-                // Update the table row with the new data
+                // Update table row with the new values
                 const row = document.querySelector(`tr[data-id="${artistConcertID}"]`);
                 row.setAttribute("data-artist-id", popupArtistName.value);
                 row.setAttribute("data-concert-id", popupConcertLocation.value);

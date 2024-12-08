@@ -1,4 +1,5 @@
 <div class="container">
+    <!-- Section: Display List of Vendors -->
     <h2>List of Vendors</h2>
     <table id="vendor-table">
         <thead>
@@ -10,11 +11,13 @@
             </tr>
         </thead>
         <tbody>
+            <!-- Loop through the data to generate table rows dynamically -->
             {{#each data}}
                 <tr data-id="{{this.vendorID}}" data-name="{{this.vendorName}}" data-product="{{this.vendorProduct}}">
                     <td>{{this.vendorID}}</td>
                     <td>{{this.vendorName}}</td>
                     <td>{{this.vendorProduct}}</td>
+                    <!-- Action buttons for editing and deleting -->
                     <td><a href="#" class="edit-btn">Edit</a></td>
                     <td><a href="#" class="delete-btn">Delete</a></td>
                 </tr>
@@ -22,40 +25,51 @@
         </tbody>
     </table>
 
-    <!-- Add Vendor Form -->
+    <!-- Section: Form to Add a New Vendor -->
     <h3>Add Vendor</h3>
     <form id="add-vendor-form" action="/add-vendor-form" method="POST">
+        <!-- Input field for vendor name -->
         <label for="addVendorName">Vendor Name:</label>
         <input type="text" id="addVendorName" name="vendorName" placeholder="Enter vendor name" required><br>
 
+        <!-- Input field for vendor product -->
         <label for="addVendorProduct">Vendor Product:</label>
         <input type="text" id="addVendorProduct" name="vendorProduct" placeholder="Enter vendor product" required><br>
 
+        <!-- Submit button -->
         <input type="submit" value="Add Vendor">
     </form>
 </div>
 
-<!-- Popup Menu -->
+<!-- Popup Menu for Editing Vendor Details -->
 <div id="popupMenu" class="popup">
-  <div class="popup-content">
-    <span id="closePopup" class="close">&times;</span>
-    <h3>Update Vendor</h3>
-    <form id="update-vendor-form" method="POST">
-        <input type="hidden" id="updateVendorID" name="vendorID">
-        <label for="updateVendorName">Vendor Name:</label>
-        <input type="text" id="updateVendorName" name="vendorName" placeholder="Enter vendor name" required><br>
-
-        <label for="updateVendorProduct">Vendor Product:</label>
-        <input type="text" id="updateVendorProduct" name="vendorProduct" placeholder="Enter vendor product" required><br>
-
-        <input type="submit" value="Update Vendor">
-    </form>
-    <button id="closeButton">Close</button>
-  </div>
+    <div class="popup-content">
+        <!-- Close button for the popup -->
+        <span id="closePopup" class="close">&times;</span>
+        <h3>Update Vendor</h3>
+        <form id="update-vendor-form" method="POST">
+            <!-- Hidden field to store the vendor ID -->
+            <input type="hidden" id="updateVendorID" name="vendorID">
+            
+            <!-- Input field for updating vendor name -->
+            <label for="updateVendorName">Vendor Name:</label>
+            <input type="text" id="updateVendorName" name="vendorName" placeholder="Enter vendor name" required><br>
+            
+            <!-- Input field for updating vendor product -->
+            <label for="updateVendorProduct">Vendor Product:</label>
+            <input type="text" id="updateVendorProduct" name="vendorProduct" placeholder="Enter vendor product" required><br>
+            
+            <!-- Submit button for the update form -->
+            <input type="submit" value="Update Vendor">
+        </form>
+        <!-- Close button -->
+        <button id="closeButton">Close</button>
+    </div>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+    // Select elements for interaction
     const deleteButtons = document.querySelectorAll(".delete-btn");
     const editButtons = document.querySelectorAll(".edit-btn");
     const popupMenu = document.getElementById("popupMenu");
@@ -66,19 +80,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const updateVendorName = document.getElementById("updateVendorName");
     const updateVendorProduct = document.getElementById("updateVendorProduct");
 
-    // Delete Vendor
+    // Handle Delete Button Click
     deleteButtons.forEach(button => {
         button.addEventListener("click", async function (event) {
             event.preventDefault();
 
+            // Get the row to delete and its vendor ID
             const row = button.closest("tr");
             const vendorId = row.getAttribute("data-id");
 
             try {
-                const response = await fetch(`/delete-vendor/${vendorId}`, {
-                    method: 'DELETE',
-                });
+                // Send DELETE request to the server
+                const response = await fetch(`/delete-vendor/${vendorId}`, { method: 'DELETE' });
                 if (response.ok) {
+                    // Remove the row from the table if deletion is successful
                     row.remove();
                 } else {
                     console.error("Failed to delete vendor");
@@ -89,27 +104,31 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Open Popup Menu on Edit
+    // Handle Edit Button Click
     editButtons.forEach(button => {
         button.addEventListener("click", (event) => {
             event.preventDefault();
 
+            // Get the row to edit and its data attributes
             const row = button.closest("tr");
             const vendorId = row.getAttribute("data-id");
             const vendorName = row.getAttribute("data-name");
             const vendorProduct = row.getAttribute("data-product");
 
+            // Populate the popup form with existing vendor details
             updateVendorID.value = vendorId;
             updateVendorName.value = vendorName;
             updateVendorProduct.value = vendorProduct;
 
+            // Update the form's action URL
             updateVendorForm.action = `/update-vendor-form/${vendorId}`;
 
+            // Display the popup menu
             popupMenu.style.display = "flex";
         });
     });
 
-    // Close Popup Menu
+    // Close Popup Menu on Click
     closePopup.addEventListener("click", () => {
         popupMenu.style.display = "none";
     });
@@ -118,7 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
         popupMenu.style.display = "none";
     });
 
-    // Close Popup Menu when clicking outside the content area
+    // Close Popup Menu when Clicking Outside the Content Area
     window.addEventListener("click", (event) => {
         if (event.target === popupMenu) {
             popupMenu.style.display = "none";
