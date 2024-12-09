@@ -233,7 +233,7 @@ app.post('/add-tour-form', function (req, res) {
 
     let query1 = `
         INSERT INTO Tours (tourName, artistID, tourStartDate, tourEndDate, concertTotal)
-        VALUES ('${data.tourName}', ${data.artistName}, '${data.startDate}', '${data.endDate}', ${concertTotal})
+        VALUES ('${data.tourName}', ${data.artistID}, '${data.startDate}', '${data.endDate}', ${concertTotal})
     `;
 
     db.pool.query(query1, function (error, rows, fields) {
@@ -258,10 +258,10 @@ app.post('/add-concert-form', function(req, res) {
     }
 
     let query1 = `
-        INSERT INTO Concerts (numTicketAvailable, numTicketSold, startDate, location, tourID) 
-        VALUES 
-        ('${data.ticketsAvailable}', '${data.ticketsSold}', '${data.startDate}', ${location}, ${data.tourName})
-    `;
+    INSERT INTO Concerts (numTicketAvailable, numTicketSold, startDate, location, tourID) 
+    VALUES 
+    ('${data.numTicketAvailable}', '${data.numTicketSold}', '${data.startDate}', ${location}, ${data.tourID})
+`;
 
     db.pool.query(query1, function(error, rows, fields) {
         if (error) {
@@ -303,12 +303,9 @@ app.post('/add-vendor-at-concert-form', function(req, res) {
     let data = req.body;
     console.log(data);
 
-    let vendorID = data.vendorName;
-    let concertID = data.concertLocation;  
-
     let query1 = `
         INSERT INTO ConcertVendorDetails (vendorID, concertID)
-        VALUES (${vendorID}, ${concertID})
+        VALUES (${data.vendorID}, ${data.concertID})
     `;
 
     db.pool.query(query1, function (error, rows, fields) {
@@ -506,13 +503,13 @@ app.post('/update-vendor-at-concert/:id', function(req, res) {
         }
     });
 });
-// // Start the server
-// app.listen(PORT, function () {
-//     console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.');
-// });
-
-app.listen(PORT, 'localhost', function () {
-    console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.');
+// Start the server
+app.listen(PORT, function () {
+    console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.');
 });
+
+// app.listen(PORT, 'localhost', function () {
+//     console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.');
+// });
 
 //update artistConcerts, concertsVendors 
