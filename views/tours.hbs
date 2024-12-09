@@ -1,16 +1,20 @@
 <div class="container">
+    <!-- Section: Display List of Tours -->
     <h2>List of Tours</h2>
     <table>
         <thead>
             <tr>
+                <!-- Dynamically generate table headers using keys from the first object in the data -->
                 {{#each data.[0]}}
                     <th>{{@key}}</th>
                 {{/each}}
+                <!-- Add two extra columns for action buttons -->
                 <th colspan="2">Actions</th>
             </tr>
         </thead>
 
         <tbody>
+            <!-- Loop through data to dynamically generate table rows -->
             {{#each data}}
                 <tr data-id="{{this.tourID}}">
                     <td>{{this.tourID}}</td>
@@ -19,6 +23,7 @@
                     <td>{{this.tourEndDate}}</td>
                     <td>{{this.concertTotal}}</td>
                     <td>{{this.artistName}}</td>
+                    <!-- Action buttons for editing and deleting a tour -->
                     <td><a href="#" class="edit-btn">Edit</a></td>
                     <td><a href="#" class="delete-btn">Delete</a></td>
                 </tr>
@@ -26,67 +31,83 @@
         </tbody>
     </table>
 
+    <!-- Section: Form to Add a New Tour -->
     <h3>Add Tour</h3>
     <p>To add a new Tour, please enter the tour information below then click 'Add Tour'!</p>
     <form id="add-tour-form" action="/add-tour-form" method="POST">
+        <!-- Input field for tour name -->
         <label for="tourName">Tour Name:</label>
         <input type="text" id="tourName" name="tourName" placeholder="Enter tour name" required><br>
 
+        <!-- Dropdown to select artist -->
         <label for="artistName">Artist Name: </label>
         <select name="artistID" id="artistName">
             <option value="">Select an Artist</option>
+            <!-- Populate dropdown with artists dynamically -->
             {{#each artists}}
                 <option value="{{this.artistID}}">{{this.artistName}}</option>
             {{/each}}
         </select><br>
 
+        <!-- Input field for start date -->
         <label for="startDate">Start Date:</label>
         <input type="date" id="startDate" name="startDate" required><br>
 
+        <!-- Input field for end date -->
         <label for="endDate">End Date:</label>
         <input type="date" id="endDate" name="endDate" required><br>
 
+        <!-- Input field for total number of concerts -->
         <label for="concertTotal">Total Concerts:</label>
         <input type="number" id="concertTotal" name="concertTotal" placeholder="Enter total number of concerts" required><br>
 
+        <!-- Submit button -->
         <input type="submit" value="Add Tour">
     </form>
 </div>
 
+<!-- Popup Menu for Editing Tour Details -->
 <div id="popupMenu" class="popup">
     <div class="popup-content">
         <form id="update-tour-form" action="/update-tour-form" method="POST">
+            <!-- Input field for tour name -->
             <label for="tourName">Tour Name:</label>
             <input type="text" id="tourName" name="tourName" placeholder="Enter tour name" required><br>
 
+            <!-- Dropdown to select artist -->
             <label for="artistName">Artist Name: </label>
             <select name="artistID" id="artistName">
                 <option value="">Select an Artist</option>
+                <!-- Populate dropdown with artists dynamically -->
                 {{#each artists}}
                     <option value="{{this.artistID}}">{{this.artistName}}</option>
                 {{/each}}
             </select><br>
 
+            <!-- Input field for start date -->
             <label for="startDate">Start Date:</label>
             <input type="date" id="startDate" name="startDate" required><br>
 
+            <!-- Input field for end date -->
             <label for="endDate">End Date:</label>
             <input type="date" id="endDate" name="endDate" required><br>
 
+            <!-- Input field for total number of concerts -->
             <label for="concertTotal">Total Concerts:</label>
             <input type="number" id="concertTotal" name="concertTotal" placeholder="Enter total number of concerts" required><br>
 
+            <!-- Submit button for updating -->
             <input type="submit" value="Update Tour">
         </form>
+        <!-- Close button for the popup -->
         <span id="closePopup" class="close">&times;</span>
         <button id="closeButton">Close</button>
     </div>
 </div>
-</body>
-</html>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+    // Select elements for interaction
     const deleteButtons = document.querySelectorAll(".delete-btn");
     const editButtons = document.querySelectorAll(".edit-btn");
     const popupMenu = document.getElementById("popupMenu");
@@ -105,11 +126,13 @@ document.addEventListener("DOMContentLoaded", () => {
         button.addEventListener("click", async function (event) {
             event.preventDefault();
 
+            // Get the row and its tour ID
             const row = button.closest("tr");
             const tourID = row.getAttribute("data-id");
-            row.remove();
+            row.remove(); // Remove the row from the UI
 
             try {
+                // Send DELETE request to the server
                 const response = await fetch(`/delete-tour/${tourID}`, { method: 'DELETE' });
                 if (!response.ok) {
                     throw new Error('Delete request failed');
@@ -124,8 +147,9 @@ document.addEventListener("DOMContentLoaded", () => {
     editButtons.forEach(button => {
         button.addEventListener("click", (event) => {
             event.preventDefault();
-            const row = button.closest("tr");
 
+            // Get the row and its data attributes
+            const row = button.closest("tr");
             const tourID = row.getAttribute("data-id");
             const tourName = row.querySelector("td:nth-child(2)").textContent;
             const artistID = row.getAttribute("data-artist-id");
@@ -133,17 +157,20 @@ document.addEventListener("DOMContentLoaded", () => {
             const endDate = row.querySelector("td:nth-child(4)").textContent;
             const concertTotal = row.querySelector("td:nth-child(5)").textContent;
 
-            form.action = `/update-tour-form/${tourID}`; 
+            // Populate form fields with the selected tour's details
+            form.action = `/update-tour-form/${tourID}`;
             tourNameInput.value = tourName;
             artistSelect.value = artistID;
             startDateInput.value = startDate;
             endDateInput.value = endDate;
             concertTotalInput.value = concertTotal;
 
+            // Show the popup menu
             popupMenu.style.display = "flex";
         });
     });
 
+    // Handle closing the popup menu
     closePopup.addEventListener("click", () => {
         popupMenu.style.display = "none";
     });
@@ -152,7 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
         popupMenu.style.display = "none";
     });
 
-    // Close Popup Menu when clicking outside the content area
+    // Close the popup when clicking outside the content area
     window.addEventListener("click", (event) => {
         if (event.target === popupMenu) {
             popupMenu.style.display = "none";

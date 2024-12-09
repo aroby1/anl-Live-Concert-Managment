@@ -1,44 +1,50 @@
+// Import express library for creating the server
 var express = require('express');
 var app = express();
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
 
+// Middleware for parsing JSON and URL-encoded data in requests
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Create an express router
+const router = express.Router();
+
+// Define the port the server will listen on
 PORT = 8544;
 
-// Database
+// Import the database connector
 var db = require('./database/db-connector');
 
-// Handlebars
+// Import and configure Handlebars as the templating engine
 const { engine } = require('express-handlebars');
-var exphbs = require('express-handlebars');     // Import express-handlebars
-app.engine('.hbs', engine({extname: ".hbs"}));  // Create an instance of the handlebars engine to process templates
-app.set('view engine', '.hbs');
-app.use(express.static('public'));
+app.engine('.hbs', engine({ extname: ".hbs" })); 
+app.set('view engine', '.hbs'); 
+app.use(express.static('public')); 
 
 /*
     ROUTES
 */
+
+// Render the homepage
 app.get('/', function(req, res) {
-    res.render('index')
+    res.render('index');
 });
 
-// Route for displaying Artists
-app.get('/artists', function (req, res) {
+// Render the Artists page with data from the database
+app.get('/artists', function(req, res) {
     let query = 'SELECT * FROM Artists';
-    
     db.pool.query(query, function(error, rows, fields) {
         if (error) {
-            console.error("Error fetching artists:", err);
+            console.error("Error fetching artists:", error);
             return res.status(400).send("Database error");
         }
         res.render('artists', { data: rows });
     });
 });
 
-// Route for displaying Vendors
-app.get('/vendors', function (req, res) {
+// Render the Vendors page with data from the database
+app.get('/vendors', function(req, res) {
     let query = 'SELECT * FROM Vendors';
-    
     db.pool.query(query, function(error, rows, fields) {
         if (error) {
             console.error("Error fetching vendors:", error);
@@ -48,71 +54,62 @@ app.get('/vendors', function (req, res) {
     });
 });
 
-// Route for displaying Tours
-app.get('/tours', function (req, res) {
+// Render the Tours page with data from the database, including artist details
+app.get('/tours', function(req, res) {
     let query1 = `
         SELECT t.tourID, t.tourName, t.tourStartDate, t.tourEndDate, t.concertTotal, a.artistName 
         FROM Tours t 
         JOIN Artists a ON t.artistID = a.artistID
     `;
-
-    let query2 = `SELECT * FROM Artists`;
-    
+    let query2 = `SELECT * FROM Artists`; // Query for artists dropdown
     db.pool.query(query1, function(error, rows, fields) {
         if (error) {
             console.error("Error fetching tours:", error);
             return res.status(400).send("Database error");
         }
-
         let tour = rows;
-
         db.pool.query(query2, (error, rows, fields) => {
             let artist = rows;
             res.render('tours', { data: tour, artists: artist });
-        })
+        });
     });
 });
 
-// Route for displaying Concerts
-app.get('/concerts', function (req, res) {
+// Render the Concerts page with data from the database
+app.get('/concerts', function(req, res) {
     let query1 = `
         SELECT c.concertID, c.numTicketAvailable, c.numTicketSold, c.startDate, c.location, t.tourName, a.artistName 
         FROM Concerts c
         JOIN Tours t ON c.tourID = t.tourID
         JOIN Artists a ON t.artistID = a.artistID
-        ORDER BY c.concertID ASC`;
-
-    let query2 = `SELECT * FROM Tours`;
-    let query3 = `SELECT * FROM Artists`;
-    
+        ORDER BY c.concertID ASC
+    `;
+    let query2 = `SELECT * FROM Tours`; // Query for tours dropdown
+    let query3 = `SELECT * FROM Artists`; // Query for artists dropdown
     db.pool.query(query1, function(error, rows, fields) {
         if (error) {
             console.error("Error fetching concerts:", error);
             return res.status(400).send("Database error 1");
         }
-
         let concerts = rows;
-
         db.pool.query(query2, function(error, rows, fields) {
             if (error) {
                 console.error("Error fetching concerts:", error);
                 return res.status(400).send("Database error 2");
             }
-
             let tours = rows;
-
             db.pool.query(query3, function(error, rows, fields) {
                 if (error) {
                     console.error("Error fetching concerts:", error);
                     return res.status(400).send("Database error");
                 }
-    
                 let artists = rows;
                 res.render('concerts', { data: concerts, tour: tours, artist: artists });
             });
         });
     });
 });
+
 
 //Route for intersection table between Artists and Concerts
 app.get('/artistConcert', function (req, res) {
@@ -171,18 +168,23 @@ app.get('/concertVendor', function (req, res) {
             return res.status(400).send("Database error");
         }
 
-        db.pool.query(query2, function (error, vendors, fields) {
+        let data = rows;
+
+        db.pool.query(query2, function (error, rows, fields) {
             if (error) {
                 console.error("Error fetching vendors:", error);
                 return res.status(400).send("Database error");
             }
+            let vendors = rows;
 
-            db.pool.query(query3, function (error, concerts, fields) {
+
+            db.pool.query(query3, function (error, rows, fields) {
                 if (error) {
                     console.error("Error fetching concerts:", error);
                     return res.status(400).send("Database error");
                 }
-                res.render('concertVendor', { data: rows, vendors: vendors, concerts: concerts });
+                let concerts = rows;
+                res.render('concertVendor', { data: data, vendors: vendors, concerts: concerts });
             });
         });
     });
@@ -318,7 +320,9 @@ app.post('/add-vendor-at-concert-form', function(req, res) {
     });
 });
 
-//Server side delete
+//Server side deletes
+
+//Delete Artists
 app.delete('/delete-artist/:id', (req, res) => {
     const taskID = parseInt(req.params.id);
     const query1 = 'DELETE FROM Artists WHERE ArtistID = ?';
@@ -334,6 +338,7 @@ app.delete('/delete-artist/:id', (req, res) => {
     });
 });
 
+//Delete Vendor
 app.delete('/delete-vendor/:id', (req, res) => {
     const taskID = parseInt(req.params.id);
     const query1 = 'DELETE FROM Vendors WHERE vendorID = ?';
@@ -349,6 +354,7 @@ app.delete('/delete-vendor/:id', (req, res) => {
     });
 });
 
+//Delete Tour
 app.delete('/delete-tour/:id', (req, res) => {
     const taskID = parseInt(req.params.id);
     const query1 = 'DELETE FROM Tours WHERE tourID = ?';
@@ -364,6 +370,7 @@ app.delete('/delete-tour/:id', (req, res) => {
     });
 });
 
+//Delete concert
 app.delete('/delete-concert/:id', (req, res) => {
     const taskID = parseInt(req.params.id);
     const query1 = 'DELETE FROM Concerts WHERE concertID = ?';
@@ -379,6 +386,7 @@ app.delete('/delete-concert/:id', (req, res) => {
     });
 });
 
+//delete concert-vendor intersection
 app.delete('/delete-concert-vendor/:id', (req, res) => {
     const taskID = parseInt(req.params.id);
     const query1 = 'DELETE FROM ConcertVendorDetails WHERE concertVendorID = ?';
@@ -394,6 +402,7 @@ app.delete('/delete-concert-vendor/:id', (req, res) => {
     });
 });
 
+//delete artist-concert intersection
 app.delete('/delete-artist-concert/:id', (req, res) => {
     const taskID = parseInt(req.params.id);
     const query1 = 'DELETE FROM ArtistConcertDetails WHERE  artistConcertID = ?';
@@ -410,6 +419,8 @@ app.delete('/delete-artist-concert/:id', (req, res) => {
 });
 
 //Updates
+
+//update artists
 app.post('/update-artist-form/:id', function(req, res) {
     let data = req.body;
     let id = parseInt(req.params.id); 
@@ -425,6 +436,7 @@ app.post('/update-artist-form/:id', function(req, res) {
     });
 });
 
+//update vendors
 app.post('/update-vendor-form/:id', function(req, res) {
     let data = req.body;
     let id = parseInt(req.params.id);
@@ -440,6 +452,7 @@ app.post('/update-vendor-form/:id', function(req, res) {
     });
 });
 
+//update tours
 app.post('/update-tour-form/:id', function(req, res) {
     let data = req.body;
     let id = parseInt(req.params.id);
@@ -456,13 +469,18 @@ app.post('/update-tour-form/:id', function(req, res) {
     });
 });
 
+//update concerts
 app.post('/update-concert/:id', function(req, res) {
     let data = req.body;
     let id = parseInt(req.params.id);
 
-    let query = `UPDATE Concerts SET numTicketAvailable = ?, numTicketSold = ?, startDate = ?, location = ? WHERE concertID = ?`;
+    if(data['tourID'] == ''){
+        data['tourID'] = null;
+    }
 
-    db.pool.query(query, [data['ticketAvailable'], data['ticketSold'], data['startDate'], data['location'], id], function(error, rows, fields) {
+    let query = `UPDATE Concerts SET numTicketAvailable = ?, numTicketSold = ?, startDate = ?, location = ?, tourID = ? WHERE concertID = ?`;
+
+    db.pool.query(query, [data['numTicketAvailable'], data['numTicketSold'], data['startDate'], data['location'], data['tourID'], id], function(error, rows, fields) {
         if (error) {
             console.log(error);
             return res.sendStatus(400); 
@@ -472,14 +490,15 @@ app.post('/update-concert/:id', function(req, res) {
     });
 });
 
+//update artist-concert table
 app.post('/update-artist-to-concert/:id', function(req, res) {
-    let data = req.body;
+    let { concertID, artistID } = req.body; 
     let id = parseInt(req.params.id);
 
     let query = `UPDATE ArtistConcertDetails SET artistID = ?, concertID = ? WHERE artistConcertID = ?`;
 
-    db.pool.query(query, [data.artistID, data.concertID, id], function(error, rows, fields) {
-        if (error) {
+    db.pool.query(query, [artistID, concertID, id], function(error, rows, fields) {
+        if (error) { 
             console.log(error);
             return res.status(400).send({ message: 'Update failed' });
         } else {
@@ -488,18 +507,19 @@ app.post('/update-artist-to-concert/:id', function(req, res) {
     });
 });
 
-app.post('/update-vendor-at-concert/:id', function(req, res) {
-    let data = req.body;
+//update vendor-concert table
+app.post('/update-vendor-at-concert/:id', (req, res) => {
+    let { concertID, vendorID } = req.body; // Destructure from JSON body
     let id = parseInt(req.params.id);
 
     let query = `UPDATE ConcertVendorDetails SET concertID = ?, vendorID = ? WHERE concertVendorID = ?`;
 
-    db.pool.query(query, [data.concertID, data.vendorID, id], function(error, rows, fields) {
+    db.pool.query(query, [concertID, vendorID, id], (error, rows, fields) => {
         if (error) {
-            console.log(error);
+            console.error(error); // Log the error for debugging
             return res.status(400).send({ message: 'Update failed' });
         } else {
-            return res.redirect('/artistVendor');
+            res.redirect('/concertVendor'); // Redirect on success
         }
     });
 });

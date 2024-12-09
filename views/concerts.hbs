@@ -15,8 +15,8 @@
                 <tr data-id="{{this.concertID}}" 
                     data-tour-id="{{this.tourID}}"
                     data-artist-id="{{this.artistID}}"
-                    data-tickets-available="{{this.numTicketAvailable}}"
-                    data-tickets-sold="{{this.numTicketSold}}"
+                    data-ticket-available="{{this.numTicketAvailable}}"
+                    data-ticket-sold="{{this.numTicketSold}}"
                     data-start-date="{{this.startDate}}"
                     data-location="{{this.location}}">
                     <td>{{ this.concertID }}</td>
@@ -39,7 +39,7 @@
     <form id="add-concert-form" action="/add-concert-form" method="POST">
         <label for="tourName">Tour Name: </label>
         <select name="tourID" id="tourName">
-            <option value="">Select a Tour</option>
+            <option value=>Select a Tour</option>
             {{#each tour}}
                 <option value="{{this.tourID}}">{{this.tourName}}</option>
             {{/each}}
@@ -53,11 +53,11 @@
             {{/each}}
         </select><br>
 
-        <label for="ticketsAvailable">Tickets Available:</label>
-        <input type="number" id="ticketsAvailable" name="numTicketAvailable" placeholder="Enter number of tickets available" required><br>
+        <label for="ticketAvailable">Tickets Available:</label>
+        <input type="number" id="ticketAvailable" name="numTicketAvailable" placeholder="Enter number of tickets available" required><br>
 
-        <label for="ticketsSold">Tickets Sold:</label>
-        <input type="number" id="ticketsSold" name="numTicketSold" placeholder="Enter number of tickets sold" required><br>
+        <label for="ticketSold">Tickets Sold:</label>
+        <input type="number" id="ticketSold" name="numTicketSold" placeholder="Enter number of tickets sold" required><br>
 
         <label for="startDate">Start Date:</label>
         <input type="datetime-local" id="startDate" name="startDate" required><br>
@@ -90,11 +90,11 @@
                 {{/each}}
             </select><br>
 
-            <label for="popupTicketsAvailable">Tickets Available:</label>
-            <input type="number" id="popupTicketsAvailable" name="numTicketAvailable" placeholder="Enter number of tickets available" required><br>
+            <label for="popupTicketAvailable">Tickets Available:</label>
+            <input type="number" id="popupTicketAvailable" name="numTicketAvailable" placeholder="Enter number of tickets available" required><br>
 
-            <label for="popupTicketsSold">Tickets Sold:</label>
-            <input type="number" id="popupTicketsSold" name="numTicketSold" placeholder="Enter number of tickets sold" required><br>
+            <label for="popupTicketSold">Tickets Sold:</label>
+            <input type="number" id="popupTicketSold" name="numTicketSold" placeholder="Enter number of tickets sold" required><br>
 
             <label for="popupStartDate">Start Date:</label>
             <input type="datetime-local" id="popupStartDate" name="startDate" required><br>
@@ -149,8 +149,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const concertID = row.dataset.id;
             const tourID = row.dataset.tourId;
             const artistID = row.dataset.artistId;
-            const ticketsAvailable = row.dataset.ticketsAvailable;
-            const ticketsSold = row.dataset.ticketsSold;
+            const ticketAvailable = row.dataset.ticketAvailable;
+            const ticketSold = row.dataset.ticketSold;
             const startDate = row.dataset.startDate;
             const location = row.dataset.location;
 
@@ -159,8 +159,8 @@ document.addEventListener("DOMContentLoaded", () => {
             updateForm.querySelector("#popupConcertID").value = concertID;
             updateForm.querySelector("#popupTourName").value = tourID;
             updateForm.querySelector("#popupArtistName").value = artistID;
-            updateForm.querySelector("#popupTicketsAvailable").value = ticketsAvailable;
-            updateForm.querySelector("#popupTicketsSold").value = ticketsSold;
+            updateForm.querySelector("#popupTicketAvailable").value = ticketAvailable;
+            updateForm.querySelector("#popupTicketSold").value = ticketSold;
             updateForm.querySelector("#popupStartDate").value = startDate;
             updateForm.querySelector("#popupLocation").value = location;
 
@@ -191,26 +191,39 @@ document.addEventListener("DOMContentLoaded", () => {
         const formData = new FormData(updateForm);
         const concertID = updateForm.getAttribute("action").split("/").pop();
 
+        // Constructing a proper payload for the update
+        const payload = {
+            tourID: formData.get("tourID"),
+            artistID: formData.get("artistID"),
+            numTicketAvailable: formData.get("numTicketAvailable"),
+            numTicketSold: formData.get("numTicketSold"),
+            startDate: formData.get("startDate"),
+            location: formData.get("location")
+        }
+
         try {
             const response = await fetch(`/update-concert/${concertID}`, {
                 method: 'POST',
-                body: formData,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
             });
 
             if (response.ok) {
                 // Update the table row with the new data
                 const row = document.querySelector(`tr[data-id="${concertID}"]`);
-                row.setAttribute("data-tour-id", updateForm.querySelector("#popupTourName").value);
-                row.setAttribute("data-artist-id", updateForm.querySelector("#popupArtistName").value);
-                row.setAttribute("data-tickets-available", updateForm.querySelector("#popupTicketsAvailable").value);
-                row.setAttribute("data-tickets-sold", updateForm.querySelector("#popupTicketsSold").value);
-                row.setAttribute("data-start-date", updateForm.querySelector("#popupStartDate").value);
-                row.setAttribute("data-location", updateForm.querySelector("#popupLocation").value);
+                row.setAttribute("data-tour-id", payload.tourID);
+                row.setAttribute("data-artist-id", payload.artistID);
+                row.setAttribute("data-ticket-available", payload.numTicketAvailable);
+                row.setAttribute("data-ticket-sold", payload.numTicketSold);
+                row.setAttribute("data-start-date", payload.startDate);
+                row.setAttribute("data-location", payload.location);
 
-                row.children[1].textContent = updateForm.querySelector("#popupTicketsAvailable").value;
-                row.children[2].textContent = updateForm.querySelector("#popupTicketsSold").value;
-                row.children[3].textContent = updateForm.querySelector("#popupStartDate").value;
-                row.children[4].textContent = updateForm.querySelector("#popupLocation").value;
+                row.children[1].textContent = payload.numTicketAvailable;
+                row.children[2].textContent = payload.numTicketSold;
+                row.children[3].textContent = payload.startDate;
+                row.children[4].textContent = payload.location;
                 row.children[5].textContent = updateForm.querySelector("#popupTourName").selectedOptions[0].text;
                 row.children[6].textContent = updateForm.querySelector("#popupArtistName").selectedOptions[0].text;
                 
